@@ -1,0 +1,33 @@
+# Django project files
+*.pyc
+*.pyo
+__pycache__/
+*.sqlite3
+
+# Static files
+prod_static/
+media/
+
+# IDE files
+.vscode/
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Compiled files
+*.pyc
+*.class
+*.war
+*.ear
+*.jar
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+*.db
+
+# OS generated files
+.DS_Store
+Thumbs.db
