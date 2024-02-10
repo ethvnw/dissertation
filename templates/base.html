@@ -11,27 +11,44 @@
     {% tailwind_css %}
 </head>
 
-<body>
-    <header class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
-        <a href="{% url 'login' %}">
-            <img class="h-12" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
-        </a>
-
-        <nav class="hidden lg:flex gap-10">
-            {% if user.is_authenticated %}
-                <a href="#">Dashboard</a>
-                <a href="#">{{ user.username }}</a>
+<body class="bg-gray-200">
+    <header class="p-4 bg-gray-100 drop-shadow-sm">
+        <div class="mx-auto max-w-7xl flex items-center justify-between">
+            <a href="{% url 'login' %}">
+                <img class="h-12" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
+            </a>
             
-            {% else %}
-                <a href="#">Login</a>
-
-            {% endif %}
-        </nav>
+            <nav class="relative lg:flex gap-10 font-medium">
+                {% if user.is_authenticated %}
+                    <a href="#" class="hover:text-uni-violet">Dashboard</a>
+                    
+                    <button id="dropdown-button" class="hover:text-uni-violet after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold">{{ user.username }}</button>
+                    
+                    <div id="dropdown" class="absolute w-40 right-0 top-10 invisible opacity-0 bg-gray-100 drop-shadow-md transition-opacity" role="menu">
+                        <a href="#" class="hover:text-uni-violet" >
+                            <p class="p-4 hover:bg-gray-200">Profile</p>
+                        </a>
+                        <a href="#" class="hover:text-uni-violet">
+                            <p class="p-4 hover:bg-gray-200">Sign Out</p>
+                        </a>
+                    </div>
+                
+                {% else %}
+                    <a href="#" class="hover:text-uni-violet">Login</a>
+                    <a href="#" class="hover:text-uni-violet">Register</a>
+                
+                {% endif %}
+            </nav>
+            
+        </div>
+        <script src="{% static "js/utils.js" %}"></script>
     </header>
-
+    
     <main>
-        {% block content %}
-        {% endblock %}
+        <div class="mx-auto max-w-7xl">
+            {% block content %}
+            {% endblock %}
+        </div>
     </main>
 </body>
 </html>
