@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock title%}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ user_form }}
+    {{ student_form }}
+
+    <button class="p-4 rounded text-green-100 bg-uni-violet" type="submit">Register</button>
+</form>
+
+{% endblock content %}

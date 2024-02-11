@@ -20,22 +20,25 @@
             
             <nav class="relative lg:flex gap-10 font-medium">
                 {% if user.is_authenticated %}
-                    <a href="#" class="hover:text-uni-violet">Dashboard</a>
+                    <a href="{% url "dashboard" %}" class="hover:text-uni-violet">Dashboard</a>
                     
-                    <button id="dropdown-button" class="hover:text-uni-violet after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold">{{ user.username }}</button>
+                    <button id="dropdown-button" class="hover:text-uni-violet after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold">{{ user }}</button>
                     
                     <div id="dropdown" class="absolute w-40 right-0 top-10 invisible opacity-0 bg-gray-100 drop-shadow-md transition-opacity" role="menu">
                         <a href="#" class="hover:text-uni-violet" >
                             <p class="p-4 hover:bg-gray-200">Profile</p>
                         </a>
-                        <a href="#" class="hover:text-uni-violet">
-                            <p class="p-4 hover:bg-gray-200">Sign Out</p>
+                        <a href="{% url "logout" %}" class="hover:text-uni-violet">
+                            <form action="{% url "logout" %}" method="post">
+                                {% csrf_token %}
+                                <button class="w-full p-4 text-left hover:bg-gray-200" type="submit">Log out</button>
+                            </form>
                         </a>
                     </div>
                 
                 {% else %}
-                    <a href="#" class="hover:text-uni-violet">Login</a>
-                    <a href="#" class="hover:text-uni-violet">Register</a>
+                    <a href="{% url "login" %}" class="hover:text-uni-violet">Login</a>
+                    <a href="{% url "register" %}" class="hover:text-uni-violet">Register</a>
                 
                 {% endif %}
             </nav>
