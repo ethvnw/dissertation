@@ -8,39 +8,41 @@
     <title>{% block title %}{% endblock %} | Sheffield ECF</title>
     <link rel="shortcut icon" href="{% static "imgs/favicon.ico" %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static "css/index.css" %}">
+    <link rel="stylesheet" href="https://use.typekit.net/hgy7jka.css">
     {% tailwind_css %}
 </head>
 
-<body class="bg-gray-200">
-    <header class="p-4 bg-gray-100 drop-shadow-sm">
-        <div class="mx-auto max-w-7xl flex items-center justify-between">
-            <a href="{% url 'login' %}">
+<body class="bg-gray-200 text-gray-900">
+    <header class="p-4 bg-gray-100 drop-shadow-md">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-8">
+            <a href="{% url 'dashboard' %}">
                 <img class="h-12" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
             </a>
-            
-            <nav class="relative lg:flex gap-10 font-medium">
-                {% if user.is_authenticated %}
-                    <a href="{% url "dashboard" %}" class="hover:text-uni-violet">Dashboard</a>
-                    
-                    <button id="dropdown-button" class="hover:text-uni-violet after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold">{{ user }}</button>
-                    
-                    <div id="dropdown" class="absolute w-40 right-0 top-10 invisible opacity-0 bg-gray-100 drop-shadow-md transition-opacity" role="menu">
-                        <a href="#" class="hover:text-uni-violet" >
-                            <p class="p-4 hover:bg-gray-200">Profile</p>
+
+            <nav>
+                <div class="absolute invisible opacity-0 transition-opacity text-center gap-8 top-20 right-0 w-full bg-gray-100 lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center" id="nav-items">
+                    <p class="p-4 lg:p-0">
+                        <a href="{% url "dashboard" %}">Dashboard</a>
+                    </p>
+                    <button id="dropdown-button" class="p-4 lg:p-0 after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold">{{ user }}</button>
+
+                    <div class="flex items-center justify-center flex-col lg:invisible lg:opacity-0 transition-opacity lg:absolute right-0 top-10 lg:bg-gray-100" id="dropdown">
+                        <a href="#" class="hover:text-uni-violet">
+                            <p class="p-4">Profile</p>
                         </a>
                         <a href="{% url "logout" %}" class="hover:text-uni-violet">
                             <form action="{% url "logout" %}" method="post">
                                 {% csrf_token %}
-                                <button class="w-full p-4 text-left hover:bg-gray-200" type="submit">Log out</button>
+                                <button class="w-full p-4 text-left" type="submit">Log out</button>
                             </form>
                         </a>
                     </div>
-                
-                {% else %}
-                    <a href="{% url "login" %}" class="hover:text-uni-violet">Login</a>
-                    <a href="{% url "register" %}" class="hover:text-uni-violet">Register</a>
-                
-                {% endif %}
+                </div>
+
+                <div class="menu-button lg:hidden" id="menu-button">
+                    <span class="cursor-pointer font-semibold" id="open-button">&#9776;</span>
+                    <span class="cursor-pointer font-semibold hidden" id="close-button">&times;</span>
+                </div>
             </nav>
             
         </div>

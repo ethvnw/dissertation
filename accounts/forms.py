@@ -4,6 +4,25 @@ from django.contrib.auth import password_validation
 
 from .models import CustomUser, Student
 
+class UserLoginForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for key, field in self.fields.items():
+            field.label = ""
+
+    template_name = "form.html"
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'Email (@sheffield.ac.uk)'}))
+    
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'Password'}))
+
 
 class CustomUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
@@ -11,6 +30,8 @@ class CustomUserCreationForm(UserCreationForm):
 
         for key, field in self.fields.items():
             field.label = ""
+
+    template_name = "form.html"
 
     def clean_email(self):
         data = self.cleaned_data['email']
@@ -20,23 +41,35 @@ class CustomUserCreationForm(UserCreationForm):
         return data
 
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'placeholder': 'Email (@sheffield.ac.uk)'}))
+        widget=forms.EmailInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'Email (@sheffield.ac.uk)'}))
     
     forename = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Forename'}))
+        widget=forms.TextInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'First name'}))
     
     surname = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Surname'}))
+        widget=forms.TextInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'Last name'}))
     
     department = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'University department'}))
+        widget=forms.TextInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'University department'}))
     
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}),
-        help_text=password_validation.password_validators_help_text_html())
+        widget=forms.PasswordInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'Password'}),
+        )
 
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm password'}))
+        widget=forms.PasswordInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'Confirm password'}))
 
     
     class Meta:
@@ -45,12 +78,17 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class StudentCreationForm(forms.ModelForm):
+    template_name = "form.html"
 
     course = forms.CharField(label="",
-        widget=forms.TextInput(attrs={'placeholder': 'University course'}))
+        widget=forms.TextInput(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
+            'placeholder': 'University course'}))
     
-    support_plan = forms.FileField(label='Upload your learning support plan (if applicable)',
-        widget=forms.FileInput(attrs={'placeholder': 'Support plan'}))
+    support_plan = forms.FileField(required=False, label='Upload your learning support plan (if applicable)',
+        widget=forms.FileInput(attrs={
+            'class': 'mt-2',
+            'placeholder': 'Support plan'}))
 
     class Meta:
         model = Student
