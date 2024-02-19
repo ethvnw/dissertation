@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import password_validation
 
 from .models import CustomUser, Student
 
@@ -11,7 +10,7 @@ class UserLoginForm(forms.Form):
         for key, field in self.fields.items():
             field.label = ""
 
-    template_name = "form.html"
+    template_name = "accounts/form.html"
 
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
@@ -31,7 +30,7 @@ class CustomUserCreationForm(UserCreationForm):
         for key, field in self.fields.items():
             field.label = ""
 
-    template_name = "form.html"
+    template_name = "accounts/form.html"
 
     def clean_email(self):
         data = self.cleaned_data['email']
@@ -78,14 +77,17 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class StudentCreationForm(forms.ModelForm):
-    template_name = "form.html"
+    template_name = "accounts/form.html"
 
-    course = forms.CharField(label="",
+    course = forms.CharField(
+        label="",
         widget=forms.TextInput(attrs={
             'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
             'placeholder': 'University course'}))
     
-    support_plan = forms.FileField(required=False, label='Upload your learning support plan (if applicable)',
+    support_plan = forms.FileField(
+        required=False,
+        label='Upload your learning support plan (if applicable)',
         widget=forms.FileInput(attrs={
             'class': 'mt-2',
             'placeholder': 'Support plan'}))

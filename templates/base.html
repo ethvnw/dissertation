@@ -10,26 +10,34 @@
     <link rel="stylesheet" href="{% static "css/index.css" %}">
     <link rel="stylesheet" href="https://use.typekit.net/hgy7jka.css">
     {% tailwind_css %}
+    <script src="https://kit.fontawesome.com/c318dff6af.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-gray-200 text-gray-900">
-    <header class="p-4 bg-gray-100 drop-shadow-md">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-8">
+<body class="bg-gray-100 text-gray-900">
+    <header>
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-8 p-4">
             <a href="{% url 'dashboard' %}">
-                <img class="h-12" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
+                <img src="{% static "imgs/logo_mobile.png" %}" alt="Sheffield ECF mobile logo" class="h-12 md:hidden">
+                <img class="h-12 hidden md:block" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
             </a>
 
-            <nav>
-                <div class="absolute invisible opacity-0 transition-opacity text-center gap-8 top-20 right-0 w-full bg-gray-100 lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center" id="nav-items">
+            <nav class="flex flex-row gap-6">
+                <div class="absolute invisible opacity-0 transition-opacity text-center gap-8 top-20 right-0 w-full bg-gray-100 drop-shadow-md lg:drop-shadow-none lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center" id="nav-items">
+                    
                     <p class="p-4 lg:p-0">
                         <a href="{% url "dashboard" %}">Dashboard</a>
                     </p>
-                    <button id="dropdown-button" class="p-4 lg:p-0 after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold">{{ user }}</button>
-
-                    <div class="flex items-center justify-center flex-col lg:invisible lg:opacity-0 transition-opacity lg:absolute right-0 top-10 lg:bg-gray-100" id="dropdown">
+                    
+                    <button id="dropdown-button" class="p-4 lg:p-0 after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold lg:hover:text-uni-violet">
+                        {{ user }}
+                    </button>
+  
+                    <div class="flex items-center flex-col lg:invisible lg:opacity-0 transition-opacity lg:absolute right-0 top-10 lg:bg-gray-100 lg:drop-shadow-md lg:w-full border border-gray-300" id="dropdown">
+                        
                         <a href="#" class="hover:text-uni-violet">
                             <p class="p-4">Profile</p>
                         </a>
+                        
                         <a href="{% url "logout" %}" class="hover:text-uni-violet">
                             <form action="{% url "logout" %}" method="post">
                                 {% csrf_token %}
@@ -37,9 +45,19 @@
                             </form>
                         </a>
                     </div>
-                </div>
 
-                <div class="menu-button lg:hidden" id="menu-button">
+                </div>
+                
+                <button class="relative">
+                    {% if user %}
+                        <i class="text-uni-violet fa-solid fa-bell"></i>
+                        <i class="absolute bg-red-400 p-1 rounded-full top-px after:bg-red-400 after:p-1 after:rounded-full after:absolute after:top-0 after:right-0 after:animate-ping"></i>
+                    {% else %}
+                        <i class="text-uni-violet fa-regular fa-bell"></i>
+                    {% endif %}
+                </button>
+
+                <div class="menu-button lg:hidden w-4" id="menu-button">
                     <span class="cursor-pointer font-semibold" id="open-button">&#9776;</span>
                     <span class="cursor-pointer font-semibold hidden" id="close-button">&times;</span>
                 </div>
@@ -50,7 +68,7 @@
     </header>
     
     <main>
-        <div class="mx-auto max-w-7xl">
+        <div class="mx-auto max-w-7xl mt-8 p-4">
             {% block content %}
             {% endblock %}
         </div>

@@ -48,4 +48,3 @@ const menuToggle = () => {
 }
 
 menuButton.addEventListener('click', menuToggle);
-

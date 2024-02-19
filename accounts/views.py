@@ -23,7 +23,7 @@ def register(request):
         user_form = CustomUserCreationForm()
         student_form = StudentCreationForm()
 
-    return render(request, 'register.html', {
+    return render(request, 'accounts/register.html', {
         'user_form': user_form, 'student_form': student_form
     })
 
@@ -49,7 +49,7 @@ def login(request):
     else:
         user_form = UserLoginForm()
 
-    return render(request, 'login.html', {'user_form': user_form})
+    return render(request, 'accounts/login.html', {'user_form': user_form})
 
 
 def logout(request):

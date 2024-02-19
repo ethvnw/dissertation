@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}New Application{% endblock %}
+{% block content %}
+
+<div class="flex flex-col lg:flex-row justify-between gap-4">
+    <aside>
+        <h2>Information</h2>
+        {% if user.student.support_plan %}
+            <p>Your account has a registered learning support plan. This will be forwarded along with your application form.</p>
+        
+        {% else %}
+            <p>You do not have a learning support plan registered to your account. If this is a mistake, please upload it on your <a href="" class="text-uni-violet hover:underline">profile page</a>.</p>
+       {% endif %} 
+    </aside>
+    
+    <section>
+        <h1 class="mb-4">New Extenuating Circumstances Application.</h1>
+        <form class="w-full" method="post">
+            {% csrf_token %}
+            
+            <div class="">
+                {{ app_form }}
+            </div>
+            <div class="hidden">
+                {{ assessment_form }}
+            </div>
+            
+            <button class="p-3 rounded-sm text-gray-100 bg-uni-violet w-full" type="submit">Submit</button>
+        </form>
+    </section>
+</div>
+
+
+
+{% endblock %}

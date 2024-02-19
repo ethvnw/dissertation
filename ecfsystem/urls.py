@@ -23,6 +23,7 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path('', include('accounts.urls')),
     path('', include('student_dashboard.urls')),
+    path('application/', include('ecfapps.urls')),
     path('admin/', admin.site.urls),
 ]
 
