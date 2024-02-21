@@ -6,7 +6,7 @@ class ECFApplicationForm(forms.ModelForm):
     template_name = "ecfapps/form.html"
 
     circumstance = forms.ChoiceField(
-        label="What is the nature of the extenuating circumstance?",
+        label="What is the nature of your extenuating circumstances?",
         choices=ECFApplication.CIRCUMSTANCE_CHOICES,
         widget=forms.Select(attrs={
             'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',}))
@@ -17,6 +17,14 @@ class ECFApplicationForm(forms.ModelForm):
             'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
             'type': 'date'}))
     
+    ongoing = forms.ChoiceField(
+        required=False,
+        label='Are your circumstances ongoing?',
+        widget=forms.RadioSelect(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 felx'}
+        ),
+        choices=((True, 'Yes'), (False, 'No')))
+
     end_date = forms.DateField(
         required=False,
         label='What is the approximate end date of your circumstances?',
@@ -28,18 +36,18 @@ class ECFApplicationForm(forms.ModelForm):
         label='Please provide a summary of your circumstances, including the impact on you and your studies.',
         widget=forms.Textarea(attrs={
             'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
-            'placeholder': 'Description of circumstances'}))
+            'placeholder': 'Your answer'}))
     
     evidence = forms.FileField(
         required=False,
         label='Upload your evidence (can also be submitted later)',
         widget=forms.FileInput(attrs={
-            'class': '',
+            'class': 'mb-2',
             'placeholder': 'Evidence'}))
     
     class Meta:
         model = ECFApplication
-        fields = ('circumstance', 'start_date', 'end_date', 'description', 'evidence')
+        fields = ('circumstance', 'start_date', 'ongoing', 'end_date', 'description', 'evidence')
 
 
 class ECFApplicationModuleAssessmentForm(forms.ModelForm):
@@ -79,4 +87,8 @@ class ECFApplicationModuleAssessmentForm(forms.ModelForm):
         fields = ('module_code', 'assessment', 'action', 'extension_date', 'more_info')
 
     
-    
+ECFApplicationModuleAssessmentFormSet = forms.modelformset_factory(
+    ECFApplicationModuleAssessment,
+    form=ECFApplicationModuleAssessmentForm,
+    extra=1
+)

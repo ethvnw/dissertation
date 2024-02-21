@@ -13,7 +13,7 @@
     <script src="https://kit.fontawesome.com/c318dff6af.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-900">
+<body class="flex flex-col min-h-dvh bg-gray-100 text-gray-900">
     <header>
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-8 p-4">
             <a href="{% url 'dashboard' %}">
@@ -22,7 +22,7 @@
             </a>
 
             <nav class="flex flex-row gap-6">
-                <div class="absolute invisible opacity-0 transition-opacity text-center gap-8 top-20 right-0 w-full bg-gray-100 drop-shadow-md lg:drop-shadow-none lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center" id="nav-items">
+                <div class="absolute invisible opacity-0 transition-opacity text-center gap-8 top-20 right-0 w-full bg-gray-50 drop-shadow-md lg:drop-shadow-none lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center lg:bg-transparent" id="nav-items">
                     
                     <p class="p-4 lg:p-0">
                         <a href="{% url "dashboard" %}">Dashboard</a>
@@ -32,7 +32,7 @@
                         {{ user }}
                     </button>
   
-                    <div class="flex items-center flex-col lg:invisible lg:opacity-0 transition-opacity lg:absolute right-0 top-10 lg:bg-gray-100 lg:drop-shadow-md lg:w-full border border-gray-300" id="dropdown">
+                    <div class="flex items-center flex-col bg-gray-50 lg:invisible lg:opacity-0 transition-opacity lg:absolute right-0 top-10 lg:drop-shadow-md lg:w-full border border-gray-300 z-50" id="dropdown">
                         
                         <a href="#" class="hover:text-uni-violet">
                             <p class="p-4">Profile</p>
@@ -51,7 +51,8 @@
                 <button class="relative">
                     {% if user %}
                         <i class="text-uni-violet fa-solid fa-bell"></i>
-                        <i class="absolute bg-red-400 p-1 rounded-full top-px after:bg-red-400 after:p-1 after:rounded-full after:absolute after:top-0 after:right-0 after:animate-ping"></i>
+                        <i class="absolute bg-red-400 p-1 rounded-full top-px
+                        after:bg-red-400 after:p-1 after:rounded-full after:absolute after:top-0 after:right-0 after:animate-ping"></i>
                     {% else %}
                         <i class="text-uni-violet fa-regular fa-bell"></i>
                     {% endif %}
@@ -67,11 +68,17 @@
         <script src="{% static "js/utils.js" %}"></script>
     </header>
     
-    <main>
-        <div class="mx-auto max-w-7xl mt-8 p-4">
+    <main class="flex-grow">
+        <div class="mx-auto max-w-7xl p-4">
             {% block content %}
             {% endblock %}
         </div>
     </main>
+
+    <footer>
+        <div class="max-w-7xl mx-auto p-4 text-gray-500">
+            <p class="text-center">&copy; 2024 Ethan Watts</p>
+        </div>
+    </footer>
 </body>
 </html>

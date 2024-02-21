@@ -47,7 +47,8 @@ module.exports = {
         },
         extend: {
             colors: {
-                'uni-violet': '#450199'
+                'uni-violet': '#450199',
+                'uni-violet-hover': '#230166'
             }
         },
     },
