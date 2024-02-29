@@ -16,7 +16,7 @@
     }
 
     .errorlist li {
-        @apply text-red-500 font-semibold text-sm mb-2;
+        @apply text-red-500 font-semibold text-sm;
     }
 }
 

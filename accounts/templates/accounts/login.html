@@ -3,16 +3,16 @@
 {% block content %}
 
     <section class="flex items-center justify-center flex-col">
-        <h1 class="mb-4">Sign in</h1>
+        <h1 class="mb-4">Sign In.</h1>
         <form class="w-full" method="post">
             {% csrf_token %}
             
             {{ user_form }}
             
-            <p class="text-right mb-6"><a class="text-uni-violet hover:underline" href="">Forgot your password?</a></p>
-            <button class="p-3 rounded-sm text-gray-100 bg-uni-violet w-full drop-shadow-md hover:drop-shadow-none hover:bg-uni-violet-hover" type="submit">Sign in</button>
+            <p class="text-right mb-6"><a class="text-uni-violet hover:underline font-semibold" href="">Forgot your password?</a></p>
+            <button class="p-3 rounded-sm text-gray-100 bg-uni-violet w-full drop-shadow-md hover:drop-shadow-none hover:bg-uni-violet-hover" type="submit">Sign In</button>
         </form>
-        <p class="mt-6">Don't have an account? <a class="text-uni-violet hover:underline" href="{% url 'register' %}">Sign up</a></p>
+        <p class="mt-6">Don't have an account? <a class="text-uni-violet hover:underline font-semibold" href="{% url 'register' %}">Sign up.</a></p>
     </section>
 
 {% endblock %}

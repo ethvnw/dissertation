@@ -5,6 +5,8 @@
  * https://unpkg.com/browse/tailwindcss@latest/stubs/defaultConfig.stub.js
  */
 
+const plugin = require('@tailwindcss/forms');
+
 module.exports = {
     content: [
         /**
@@ -61,6 +63,10 @@ module.exports = {
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
         require('@tailwindcss/aspect-ratio'),
+
+        plugin(function({addVariant}) {
+            addVariant('not-last', '&:not(:last-child)')
+        })
     ],
     safelist: [
         'errorlist',

@@ -18,10 +18,10 @@ class ECFApplication(models.Model):
     )
 
     CIRCUMSTANCE_CHOICES = [
-        ('SM', 'Short Term Medical Episode'),
-        ('LM', 'Long Term Medical Condition'),
-        ('BE', 'Bereavement'),
         ('PE', 'Adverse Personal or Family Circumstances'),
+        ('BE', 'Bereavement'),
+        ('LM', 'Long Term Medical Condition'),
+        ('SM', 'Short Term Medical Episode'),
         ('OT', 'Other'),
     ]
     circumstance = models.CharField(
@@ -46,11 +46,11 @@ class ECFApplicationModuleAssessment(models.Model):
     assessment = models.CharField(max_length=100)
 
     ACTION_CHOICES = [
-        ('EX', 'Extension'),
-        ('NA', 'Not Assessed'),
-        ('LR', 'Late Penalty Removal'),
-        ('BC', 'Exam Board Consideration'),
         ('AA', 'Authorised Absence'),
+        ('BC', 'Exam Board Consideration'),
+        ('EX', 'Extension'),
+        ('LR', 'Late Penalty Removal'),
+        ('NA', 'Not Assessed'),
         ('OT', 'Other'),
     ]
     action = models.CharField(

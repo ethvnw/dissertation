@@ -22,7 +22,7 @@
             </a>
 
             <nav class="flex flex-row gap-6">
-                <div class="absolute invisible opacity-0 transition-opacity text-center gap-8 top-20 right-0 w-full bg-gray-50 drop-shadow-md lg:drop-shadow-none lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center lg:bg-transparent" id="nav-items">
+                <div class="absolute invisible opacity-0 transition-opacity gap-8 top-20 right-0 w-full bg-gray-50 drop-shadow-md lg:drop-shadow-none lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center lg:bg-transparent" id="nav-items">
                     
                     <p class="p-4 lg:p-0">
                         <a href="{% url "dashboard" %}">Dashboard</a>
@@ -34,14 +34,16 @@
   
                     <div class="flex items-center flex-col bg-gray-50 lg:invisible lg:opacity-0 transition-opacity lg:absolute right-0 top-10 lg:drop-shadow-md lg:w-full border border-gray-300 z-50" id="dropdown">
                         
-                        <a href="#" class="hover:text-uni-violet">
-                            <p class="p-4">Profile</p>
+                        <a href="{% url "profile" %}" class="flex flex-row items-center w-full p-4 gap-4 hover:bg-gray-200">
+                            <i class="fa-solid fa-user w-[16px]"></i>
+                            <p class="">Profile</p>
                         </a>
                         
-                        <a href="{% url "logout" %}" class="hover:text-uni-violet">
+                        <a href="{% url "logout" %}" class="flex flex-row items-center w-full p-4 gap-4 hover:bg-gray-200">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
                             <form action="{% url "logout" %}" method="post">
                                 {% csrf_token %}
-                                <button class="w-full p-4 text-left" type="submit">Log out</button>
+                                <button class="" type="submit">Log out</button>
                             </form>
                         </a>
                     </div>

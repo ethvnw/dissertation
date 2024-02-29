@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
+    'formtools',
     'accounts',
     'ecfapps',
     'student_dashboard',

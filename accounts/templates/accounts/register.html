@@ -3,16 +3,26 @@
 {% block content %}
 
     <section class="flex items-center justify-center flex-col">
-        <h1 class="mb-4">Register</h1>
+        <h1 class="mb-4">Register.</h1>
         <form class="w-full" method="post">
             {% csrf_token %}
             
-            {{ user_form }}
+            {% for field in user_form %}
+                {% if field.name == "forename" %}
+                    <div class="flex flex-row gap-2">
+                        {{ field }}
+                {% elif field.name == "surname" %}
+                        {{ field }}
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+            {% endfor %}
             {{ student_form }}
 
         <button class="p-3 mt-6 rounded-sm text-gray-100 bg-uni-violet w-full drop-shadow-md hover:drop-shadow-none hover:bg-uni-violet-hover" type="submit">Register</button>
         </form>
-        <p class="mt-6">Already registered? <a class="text-uni-violet hover:underline" href="{% url 'login' %}">Sign in</a></p>
+        <p class="mt-6">Already registered? <a class="text-uni-violet hover:underline font-semibold" href="{% url 'login' %}">Sign in.</a></p>
     </section>
 
 {% endblock %}

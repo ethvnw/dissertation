@@ -15,7 +15,7 @@ class UserLoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
-            'placeholder': 'Email (@sheffield.ac.uk)'}))
+            'placeholder': 'Email address (@sheffield.ac.uk)'}))
     
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
@@ -42,7 +42,7 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         widget=forms.EmailInput(attrs={
             'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
-            'placeholder': 'Email (@sheffield.ac.uk)'}))
+            'placeholder': 'Email address (@sheffield.ac.uk)'}))
     
     forename = forms.CharField(
         widget=forms.TextInput(attrs={

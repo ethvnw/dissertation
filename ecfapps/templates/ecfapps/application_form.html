@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 {% block title %}New Application{% endblock %}
 {% block content %}
 
 <div class="flex flex-col lg:flex-row justify-between gap-8">
-    <aside>
+    <aside class="w-full">
         <h1 class="mb-4">New Extenuating Circumstances Application.</h1>
         <h2 class="mb-2">Information</h2>
         <div class="flex flex-row items-baseline gap-2 mb-4">
@@ -28,31 +29,19 @@
     </aside>
     
     <section class="p-4 rounded-sm bg-gray-50 shadow-md w-full">
-        <form id="form-container" class="w-full" method="post" data-active-form="info-form">
+        <form enctype="multipart/form-data" action="" method="post">
             {% csrf_token %}
-            {{ assessment_formset.management_form }}
-            
-            <div id="info-form" data-is-form="true">
-                {{ app_form }}
-            </div>
+            {{ wizard.management_form }}
+            {{ wizard.form.management_form }}
+            {{ wizard.form.as_p }}
 
-            {% for form in assessment_formset %}
-                <div id="module-0" class="hidden" data-is-form="true" data-is-module-form="true">
-                    {{ form }}
-                </div>
-            {% endfor %}    
-            
-            <div id="button-container" class="flex justify-between border-t border-gray-300 mt-4 pt-2">
-                <button id="back-button" class="px-4 py-2 rounded-sm border border-uni-violet drop-shadow-md cursor-pointer hidden hover:text-uni-violet">Back</button>
-                <button id="next-button" class="px-4 py-2 rounded-sm text-gray-100 bg-uni-violet drop-shadow-md hover:bg-uni-violet-hover hover:drop-shadow-none cursor-pointer hover:text-gray-100">Next</button>
-    
-                <button id="add-module-form" class="px-4 py-2 rounded-sm border border-uni-violet drop-shadow-md cursor-pointer hover:text-uni-violet hidden">Add another module asessment</button>
-                <button id="submit-button" class="px-4 py-2 rounded-sm text-gray-100 bg-uni-violet drop-shadow-md hover:bg-uni-violet-hover hover:drop-shadow-none hidden" type="submit">Submit</button>
+            <div class="flex flex-row justify-between border-t pt-2 border-gray-300">
+                <button type="submit" class="px-4 py-2 rounded-sm text-gray-100 bg-uni-violet drop-shadow-md hover:bg-uni-violet-hover hover:drop-shadow-none">Continue</button>
             </div>
-            
         </form>
+
+        <script src="{% static "ecfapps/js/application_form_control.js" %}"></script>
     </section>
 </div>
 
-<script src="{% static "ecfapps/js/form_control.js" %}"></script>
 {% endblock %}

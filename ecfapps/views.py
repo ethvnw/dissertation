@@ -1,30 +1,68 @@
+import os
+from django.forms import formset_factory
+from django.conf import settings
 from django.shortcuts import redirect, render
+from django.core.files.storage import FileSystemStorage
+from formtools.wizard.views import SessionWizardView
 
-from .models import ECFApplicationModuleAssessment
-from .forms import ECFApplicationForm, ECFApplicationModuleAssessmentFormSet
+from .forms import ECFApplicationForm, ECFApplicationModuleAssessmentForm
 
-def new(request):
-    if request.method == 'POST':
-        app_form = ECFApplicationForm(request.POST, request.FILES)
-        assessment_formset = ECFApplicationModuleAssessmentFormSet(data=request.POST)
+ECFApplicationModuleAssessmentFormSet = formset_factory(
+    form=ECFApplicationModuleAssessmentForm, extra=1
+)
 
-        if app_form.is_valid() and assessment_formset.is_valid():
-            app = app_form.save(commit=False)
-            assessments = assessment_formset.save(commit=False)
+FORMS = [
+    ('application_form', ECFApplicationForm),
+    ('module_formset', ECFApplicationModuleAssessmentFormSet)
+]
 
-            app.student = request.user
-            app.save()
+TEMPLATES = {
+    'application_form': 'ecfapps/application_form.html',
+    'module_formset': 'ecfapps/module_form.html'
+}
 
-            for assessment in assessments:
-                assessment.application = app
-                assessment.save()
+class ECFAppWizard(SessionWizardView):
+    form_list = FORMS
+    file_storage = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'tmp'))
 
-            return redirect('dashboard')
+    def get_template_names(self):
+        return [TEMPLATES[self.steps.current]]
+    
+    def render_goto_step(self, goto_step, **kwargs):
+        print(self.request.FILES)
+        current_form = self.get_form(self.storage.current_step, data=self.request.POST,files=self.request.FILES)
+
+        if current_form.is_valid():
+            self.storage.set_step_data(
+                self.storage.current_step, self.process_step(current_form))
+            self.storage.set_step_files(
+                self.storage.current_step, self.process_step_files(current_form))
+
+            self.storage.current_step = goto_step
+            form = self.get_form(
+                data=self.storage.get_step_data(self.steps.current),
+                files=self.storage.get_step_files(self.steps.current))
+            return self.render(form, **kwargs)
         
-    else:
-        app_form = ECFApplicationForm()
-        assessment_formset = ECFApplicationModuleAssessmentFormSet(queryset=ECFApplicationModuleAssessment.objects.none())
+        else:
+            return self.render(current_form, **kwargs)
 
-    return render(request, 'ecfapps/new.html', {
-        'app_form': app_form, 'assessment_formset': assessment_formset
-    })
+
+    def done(self, form_list, form_dict, **kwargs):
+        application_form = form_dict['application_form']
+        print(application_form.cleaned_data)
+        application = application_form.save(commit=False)
+        application.student = self.request.user
+        application.save()
+
+        module_formset = form_dict['module_formset']
+        for form in module_formset:
+            assessment = form.save(commit=False)
+            assessment.application = application
+            assessment.save()
+        
+        return redirect('ecfapps:success')
+
+
+def success(request):
+    return render(request, 'ecfapps/success.html')
