@@ -1,7 +1,8 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import CustomUser, Student
+from .models import User, Student
 
 class UserLoginForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -54,10 +55,10 @@ class CustomUserCreationForm(UserCreationForm):
             'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
             'placeholder': 'Last name'}))
     
-    department = forms.CharField(
-        widget=forms.TextInput(attrs={
-            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full',
-            'placeholder': 'University department'}))
+    department = forms.ChoiceField(
+        choices=settings.DEPARTMENTS,
+        widget=forms.Select(attrs={
+            'class': 'bg-transparent rounded-sm border-uni-violet mb-2 w-full'}))
     
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={
@@ -72,7 +73,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('email', 'forename', 'surname', 'department', 'password1', 'password2')
 
 
@@ -95,3 +96,18 @@ class StudentCreationForm(forms.ModelForm):
     class Meta:
         model = Student
         fields = ('course', 'support_plan')
+
+
+class StudentUpdateForm(forms.ModelForm):
+    template_name = "accounts/form.html"
+   
+    support_plan = forms.FileField(
+        required=True,
+        label='',
+        widget=forms.FileInput(attrs={
+            'class': 'mb-4',
+            'placeholder': 'Support plan'}))
+
+    class Meta:
+        model = Student
+        fields = ('support_plan',)

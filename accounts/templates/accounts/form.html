@@ -1,9 +1,21 @@
 {% for field in form %}
-    <div class="form-group">
-        {{ field.label_tag }}
+    {% if field.name == "forename" %}
+        <div class="flex flex-row gap-2">
         {{ field }}
         {{ field.errors }}
-    </div>
+        
+    {% elif field.name == "surname" %}
+        {{ field }} 
+        {{ field.errors }}
+        </div>  
+
+    {% else %}
+        <div>
+        {{ field }}
+        {{ field.errors }}
+        </div>
+
+    {% endif %}
 {% endfor %}
 
 {{ form.non_field_errors }}

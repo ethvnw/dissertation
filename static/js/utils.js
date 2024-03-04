@@ -1,50 +1,34 @@
-const dropdownToggle = () => {
-    const dropdown = document.getElementById('dropdown');
-    if (dropdown.classList.contains('lg:invisible')) {
-        dropdown.classList.remove('lg:invisible', 'lg:opacity-0');
-        dropdown.classList.add('lg:opacity-100');
-    
-    } else {
-        dropdown.classList.add('lg:invisible', 'lg:opacity-0');
-    }
+const navButton = document.getElementById('nav-button');
+navButton.onclick = () => {
+    const navBar = document.getElementById('nav-bar');
+    const navButtonIcon = navButton.querySelector('i');
+
+    navBar.classList.toggle('p-4');
+    navBar.classList.toggle('h-0');
+    navButtonIcon.classList.toggle('fa-bars');
+    navButtonIcon.classList.toggle('fa-times');
 }
 
 const dropdownButton = document.getElementById('dropdown-button');
-
-if (screen.width > 1024) {
-    dropdownButton.addEventListener('click', dropdownToggle);
-    document.documentElement.addEventListener('click', (event) => {
-        if (event.target !== dropdownButton) {
-            const dropdown = document.getElementById('dropdown');
-
-            if (!dropdown.classList.contains('lg:invisible')) {
-                dropdown.classList.add('lg:invisible', 'lg:opacity-0');
-            }
-        }
-    });
+const dropdownToggle = () => {
+    const dropdown = document.getElementById('dropdown');
+    
+    if (dropdownButton.lastChild.style.transform === 'rotate(180deg)') {
+        dropdownButton.lastChild.style.transform = ('rotate(0deg)');
+    } else {
+        dropdownButton.lastChild.style.transform = ('rotate(180deg)');
+    }
+    
+    dropdown.classList.toggle('lg:h-0');
+    dropdown.classList.toggle('lg:p-4');
 }
 
-
-const menuButton = document.getElementById('menu-button');
-const openButton = document.getElementById('open-button');
-const closeButton = document.getElementById('close-button');
-const navItems = document.getElementById('nav-items');
-
-const menuToggle = () => {
-    if (navItems.classList.contains('invisible')) {
-        navItems.classList.add('opacity-100');
-        navItems.classList.remove('invisible', 'opacity-0');
-
-        openButton.classList.toggle('hidden');
-        closeButton.classList.toggle('hidden');
-    
-    } else {
-        navItems.classList.add('invisible', 'opacity-0');
-        navItems.classList.remove('opacity-100');
-
-        openButton.classList.toggle('hidden');
-        closeButton.classList.toggle('hidden');
+dropdownButton.onclick = dropdownToggle;
+document.documentElement.onclick = (event) => {
+    if (event.target !== dropdownButton) {
+        const dropdown = document.getElementById('dropdown');
+        if (!dropdown.classList.contains('lg:h-0')) {
+            dropdownToggle();
+        }
     }
 }
-
-menuButton.addEventListener('click', menuToggle);

@@ -1,8 +1,10 @@
+import os
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 class ECFApplication(models.Model):
-    student = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
+    student = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now_add=True)
 
     STATUS_CHOICES = [
@@ -35,6 +37,12 @@ class ECFApplication(models.Model):
     evidence = models.FileField(upload_to='evidence/', null=True, blank=True)
 
     last_updated = models.DateTimeField(auto_now=True)
+
+    def evidence_file(self):
+        return os.path.basename(self.evidence.name)
+
+    def get_absolute_url(self):
+        return reverse('ecfapps:detail', args=[str(self.id)])
 
     def __str__(self):
         return f"{self.student} - {self.get_circumstance_display()} ({self.submission_date})"

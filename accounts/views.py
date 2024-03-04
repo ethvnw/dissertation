@@ -1,9 +1,33 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import logout as auth_logout, authenticate, login as auth_login
+from django.contrib.auth.decorators import login_required
+from django_sendfile import sendfile
+from django.core.exceptions import PermissionDenied
 
+from ecfapps.models import ECFApplication
+from .models import Student
 from .forms import CustomUserCreationForm, StudentCreationForm, UserLoginForm
 
-# Create your views here.
+
+@login_required
+def download(request):
+    file_name = request.GET.get('file')
+    file_type = file_name.split('/')[0]
+    
+    if file_type == 'evidence':
+        application = get_object_or_404(ECFApplication, evidence=file_name)
+        
+        if application.student != request.user:
+            raise PermissionDenied()
+        
+    elif file_type == 'support_plans':
+        student = get_object_or_404(Student, support_plan=file_name)
+        
+        if student.user != request.user:
+            raise PermissionDenied()
+        
+    return sendfile(request, file_name)
+
 
 def register(request):
     if request.method == 'POST':
@@ -30,7 +54,7 @@ def register(request):
 
 def login(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('student:dashboard')
     
     if request.method == 'POST':
         user_form = UserLoginForm(request.POST)

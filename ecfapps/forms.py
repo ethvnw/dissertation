@@ -83,3 +83,14 @@ class ECFApplicationModuleAssessmentForm(forms.ModelForm):
     class Meta:
         model = ECFApplicationModuleAssessment
         fields = ('module_code', 'assessment', 'action', 'extension_date', 'more_info')
+
+
+class ECFApplicationEvidenceForm(forms.ModelForm):
+    evidence = forms.FileField(
+        label='',
+        widget=forms.FileInput(attrs={
+            'class': 'mb-4'}))
+    
+    class Meta:
+        model = ECFApplication
+        fields = ('evidence',)

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import csv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,9 +46,10 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'formtools',
+    'django_sendfile',
     'accounts',
     'ecfapps',
-    'student_dashboard',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -106,7 +108,7 @@ LOGIN_URL = '/login'
 
 LOGIN_REDIRECT_URL = 'dashboard'
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'accounts.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -149,7 +151,8 @@ STATIC_ROOT = BASE_DIR / 'prod_static'
 
 
 # Media files (User uploaded files)
-
+SENDFILE_BACKEND = "django_sendfile.backends.simple"
+SENDFILE_ROOT = BASE_DIR / 'uploads'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 
@@ -158,3 +161,10 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# read in departments from a file
+with open(BASE_DIR / 'static' / 'departments.txt', 'r') as f:
+    reader = csv.reader(f)
+    DEPARTMENTS = {rows[0].strip():rows[1].strip() for rows in reader}
+    DEPARTMENTS = dict(sorted(DEPARTMENTS.items(), key=lambda item: item[1]))
+    f.close()

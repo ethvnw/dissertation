@@ -1,11 +1,15 @@
 import os
 from django.forms import formset_factory
 from django.conf import settings
-from django.shortcuts import redirect, render
+from django.http import Http404
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.files.storage import FileSystemStorage
 from formtools.wizard.views import SessionWizardView
+from django.contrib.auth.decorators import login_required
 
-from .forms import ECFApplicationForm, ECFApplicationModuleAssessmentForm
+from .models import ECFApplication
+from .forms import ECFApplicationEvidenceForm, ECFApplicationForm, ECFApplicationModuleAssessmentForm
 
 ECFApplicationModuleAssessmentFormSet = formset_factory(
     form=ECFApplicationModuleAssessmentForm, extra=1
@@ -50,7 +54,6 @@ class ECFAppWizard(SessionWizardView):
 
     def done(self, form_list, form_dict, **kwargs):
         application_form = form_dict['application_form']
-        print(application_form.cleaned_data)
         application = application_form.save(commit=False)
         application.student = self.request.user
         application.save()
@@ -64,5 +67,35 @@ class ECFAppWizard(SessionWizardView):
         return redirect('ecfapps:success')
 
 
+@login_required
 def success(request):
     return render(request, 'ecfapps/success.html')
+
+
+@login_required
+def detail(request, pk):
+    if request.method == 'POST':
+        evidence_form = ECFApplicationEvidenceForm(request.POST, request.FILES)
+
+        if evidence_form.is_valid():
+            application = ECFApplication.objects.get(pk=pk)
+            application.evidence = evidence_form.cleaned_data['evidence']
+            application.save()
+            
+            return redirect('ecfapps:detail', pk=pk)
+        
+    else:
+        application = get_object_or_404(ECFApplication, pk=pk)
+
+        # only render the page if the user is the owner of the application
+        if application.student != request.user:
+            raise PermissionDenied()
+        
+        evidence_form = ECFApplicationEvidenceForm()
+        assesssments = application.ecfapplicationmoduleassessment_set.all()
+
+        return render(request, 'ecfapps/detail.html', {
+            'application': application,
+            'assessments': assesssments, 
+            'evidence_form': evidence_form
+        })

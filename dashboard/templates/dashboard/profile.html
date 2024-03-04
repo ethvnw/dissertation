@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+
+<div class="flex flex-col lg:flex-row justify-between gap-8">
+    <aside class="w-full">
+        <h1 class="mb-4">Profile.</h1>
+        <h2 class="mb-2">Information</h2>
+
+        <p class="mb-4">The purpose of your profile is to review the data that is passed along with any exentuating circumstance application that you may make. You may not edit the information on this page to ensure integrity of data.</p>
+
+        <h2 class="mb-2">Learning Support Plan</h2>
+        {% if user.student.support_plan != "" %}
+            <p class="mb-2">You currently have an uploaded learning support plan. You may download this in your profile details to review it, or upload a new one.</p>
+        {% else %}
+            <p class="mb-2">You currently do not have a learning support plan uploaded. You may upload one now.</p>
+        {% endif %}
+        
+        <button id="open-support-form" class="px-4 py-2 rounded-sm border border-uni-violet drop-shadow-md hover:drop-shadow-none hover:bg-uni-violet hover:text-gray-100">New Upload</button>
+
+        <div id="support-form" class="hidden fixed z-50 left-0 top-0 bg-gray-800/70 w-full h-full">
+            <div class="fixed z-50 bg-gray-100 left-1/2 top-1/2 -translate-x-1/2 -translate-y-full w-5/6 p-4 lg:w-auto rounded">
+                <button id="close-support-form" class="absolute right-4 top-2 text-3xl text-gray-400 hover:text-gray-600">&times;</button>
+
+                <h2 class="mb-4">Upload Learning Support Plan</h2>
+                <form enctype="multipart/form-data" method="post" class="">
+                    {% csrf_token %}
+                    
+                    {{ support_form.as_p }}
+                
+                    <button type="submit" class="px-4 py-2 rounded-sm text-gray-100 bg-uni-violet drop-shadow-md hover:bg-uni-violet-hover hover:drop-shadow-none">Upload</button>
+                </form>
+            </div>
+        </div>
+    </aside>
+    
+    <section class="p-4 rounded bg-gray-50 shadow-md w-full">
+        <label for="email">Email Address</label>
+        <input type="text" name="email" value="{{ user.email }}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
+
+        <div class="flex flex-row gap-2">
+            <div>
+                <label for="first-name">First Name</label>
+                <input type="text" name="first-name" value="{{ user.forename }}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
+            </div>
+
+            <div>
+                <label for="last-name">Last Name</label>
+                <input type="text" name="last-name" value="{{ user.surname }}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
+            </div>
+        </div>
+
+        <label for="department">Department</label>
+        <input type="text" name="department" value="{{ user.department }}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
+
+        <label for="course">Course</label>
+        <input type="text" name="course" value="{{ user.student.course }}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
+
+        {% if user.student.support_plan != "" %}
+            <label for="support-plan">Learning Support Plan</label>
+            <input type="text" name="support-plan" value="{{ user.student.support_plan_file }}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
+            <form action="{% url "download" %}" method="get" class="mb-4">
+                <input type="hidden" name="file" value="{{ user.student.support_plan }}">
+                <button type="submit" class="px-4 py-2 rounded-sm text-gray-100 bg-uni-violet drop-shadow-md hover:bg-uni-violet-hover hover:drop-shadow-none">Download Learning Support Plan</button>
+            </form>
+        {% endif %}
+    </section>
+</div>
+
+<script src="{% static "dashboard/js/plan_form_control.js" %}"></script>
+{% endblock %}

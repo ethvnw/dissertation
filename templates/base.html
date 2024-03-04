@@ -1,86 +1,60 @@
 {% load static tailwind_tags %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} | Sheffield ECF</title>
+    <title>{% block title %}{% endblock title %} | Sheffield ECF</title>
     <link rel="shortcut icon" href="{% static "imgs/favicon.ico" %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static "css/index.css" %}">
     <link rel="stylesheet" href="https://use.typekit.net/hgy7jka.css">
     {% tailwind_css %}
     <script src="https://kit.fontawesome.com/c318dff6af.js" crossorigin="anonymous"></script>
 </head>
+<body class="flex flex-col max-w-6xl mx-auto min-h-dvh bg-gray-100 text-gray-900">
+    <header class="flex flex-row items-center justify-between p-4 mb-4">
+        <a href="{% url "index" %}">
+            <img class="h-12 md:hidden" src="{% static "imgs/logo_mobile.png" %}" alt="Sheffield ECF logo">
+            <img class="h-12 hidden md:block" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
+        </a>
 
-<body class="flex flex-col min-h-dvh bg-gray-100 text-gray-900">
-    <header>
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-8 p-4">
-            <a href="{% url 'dashboard' %}">
-                <img src="{% static "imgs/logo_mobile.png" %}" alt="Sheffield ECF mobile logo" class="h-12 md:hidden">
-                <img class="h-12 hidden md:block" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
-            </a>
+        <nav class="flex flex-row gap-8 items-center">
+            <div id="nav-bar" class="absolute h-0 overflow-y-hidden flex flex-col gap-8 top-20 left-0 w-full font-medium text-center bg-gray-100 shadow-md transition-all lg:relative lg:top-0 lg:flex-row lg:shadow-none lg:h-full lg:overflow-y-visible">
+                <a href="{% url "dashboard" %}">Dashboard</a>
+                <a id="dropdown-button" class="hidden lg:block hover:text-uni-violet hover:cursor-pointer">{{ user }} <i class="fa fa-chevron-down text-uni-violet transition-transform"></i></a>
 
-            <nav class="flex flex-row gap-6">
-                <div class="absolute invisible opacity-0 transition-opacity gap-8 top-20 right-0 w-full bg-gray-50 drop-shadow-md lg:drop-shadow-none lg:visible lg:opacity-100 lg:relative lg:top-0 lg:flex-row lg:flex lg:items-center lg:bg-transparent" id="nav-items">
-                    
-                    <p class="p-4 lg:p-0">
-                        <a href="{% url "dashboard" %}">Dashboard</a>
-                    </p>
-                    
-                    <button id="dropdown-button" class="p-4 lg:p-0 after:content-['∨'] after:ml-1.5 after:text-uni-violet after:font-bold lg:hover:text-uni-violet">
-                        {{ user }}
-                    </button>
-  
-                    <div class="flex items-center flex-col bg-gray-50 lg:invisible lg:opacity-0 transition-opacity lg:absolute right-0 top-10 lg:drop-shadow-md lg:w-full border border-gray-300 z-50" id="dropdown">
-                        
-                        <a href="{% url "profile" %}" class="flex flex-row items-center w-full p-4 gap-4 hover:bg-gray-200">
-                            <i class="fa-solid fa-user w-[16px]"></i>
-                            <p class="">Profile</p>
-                        </a>
-                        
-                        <a href="{% url "logout" %}" class="flex flex-row items-center w-full p-4 gap-4 hover:bg-gray-200">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                            <form action="{% url "logout" %}" method="post">
-                                {% csrf_token %}
-                                <button class="" type="submit">Log out</button>
-                            </form>
-                        </a>
-                    </div>
-
+                <div id="dropdown" class="flex flex-col gap-8 lg:absolute lg:right-0 lg:top-10 lg:bg-gray-50 lg:w-full lg:shadow lg:h-0 lg:transition-all lg:overflow-y-hidden lg:rounded">
+                    <a href="{% url "profile" %}">Profile</a>
+                    <a href="{% url "logout" %}">Sign Out</a>
                 </div>
-                
+            </div>
+            
+            <div class="flex flex-row gap-6">
                 <button class="relative">
                     {% if user %}
-                        <i class="text-uni-violet fa-solid fa-bell"></i>
-                        <i class="absolute bg-red-400 p-1 rounded-full top-px
-                        after:bg-red-400 after:p-1 after:rounded-full after:absolute after:top-0 after:right-0 after:animate-ping"></i>
+                        <i class="fa-solid fa-bell text-uni-violet"></i>
+                        <span class="absolute bg-red-400 p-1 rounded-full after:absolute after:p-1 after:rounded-full after:right-0 after:top-0 after:bg-red-400 after:animate-ping"></span>
                     {% else %}
-                        <i class="text-uni-violet fa-regular fa-bell"></i>
+                        <i class="fa-regular fa-bell text-uni-violet"></i>
                     {% endif %}
                 </button>
-
-                <div class="menu-button lg:hidden w-4" id="menu-button">
-                    <span class="cursor-pointer font-semibold" id="open-button">&#9776;</span>
-                    <span class="cursor-pointer font-semibold hidden" id="close-button">&times;</span>
-                </div>
-            </nav>
-            
-        </div>
-        <script src="{% static "js/utils.js" %}"></script>
+                
+                <button id="nav-button" class="lg:hidden">
+                    <i class="fa-solid fa-bars w-5"></i>
+                </button>
+            </div>
+        </nav>
     </header>
     
-    <main class="flex-grow">
-        <div class="mx-auto max-w-7xl p-4">
-            {% block content %}
-            {% endblock %}
-        </div>
+    <main class="flex-grow px-4 mb-4">
+        {% block content %}
+        {% endblock content %}
     </main>
 
     <footer>
-        <div class="max-w-7xl mx-auto p-4 text-gray-500">
-            <p class="text-center">&copy; 2024 Ethan Watts</p>
-        </div>
+        <p class="my-4 text-center text-gray-500">&copy; 2024 Ethan Watts</p>
     </footer>
+
+    <script src="{% static "js/utils.js" %}"></script>
 </body>
 </html>

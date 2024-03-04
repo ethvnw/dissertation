@@ -11,6 +11,10 @@
         @apply text-xl;
     }
 
+    h3 {
+        @apply text-lg;
+    }
+
     a:hover {
         @apply text-uni-violet;
     }

@@ -7,17 +7,7 @@
         <form class="w-full" method="post">
             {% csrf_token %}
             
-            {% for field in user_form %}
-                {% if field.name == "forename" %}
-                    <div class="flex flex-row gap-2">
-                        {{ field }}
-                {% elif field.name == "surname" %}
-                        {{ field }}
-                    </div>
-                {% else %}
-                    {{ field }}
-                {% endif %}
-            {% endfor %}
+            {{ user_form }}
             {{ student_form }}
 
         <button class="p-3 mt-6 rounded-sm text-gray-100 bg-uni-violet w-full drop-shadow-md hover:drop-shadow-none hover:bg-uni-violet-hover" type="submit">Register</button>
