@@ -24,8 +24,8 @@
                 <a id="dropdown-button" class="hidden lg:block hover:text-uni-violet hover:cursor-pointer">{{ user }} <i class="fa fa-chevron-down text-uni-violet transition-transform"></i></a>
 
                 <div id="dropdown" class="flex flex-col gap-8 lg:absolute lg:right-0 lg:top-10 lg:bg-gray-50 lg:w-full lg:shadow lg:h-0 lg:transition-all lg:overflow-y-hidden lg:rounded">
-                    <a href="{% url "profile" %}">Profile</a>
-                    <a href="{% url "logout" %}">Sign Out</a>
+                    <a href="{{ request.user.get_absolute_url }}">Profile</a>
+                    <a href="{% url "signout" %}">Sign Out</a>
                 </div>
             </div>
             

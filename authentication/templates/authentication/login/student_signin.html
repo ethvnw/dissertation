@@ -1,0 +1,14 @@
+{% extends "authentication/base.html" %}
+{% block title %}Sign In{% endblock title %}
+{% block content %}
+
+<h1 class="text-center">Sign In.</h1>
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {{ form}}
+    <button class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none w-full" type="submit">Sign In</button>
+</form>
+
+<p class="text-center mt-4">Don't have an account? <a class="text-uni-violet font-semibold hover:underline" href="{% url 'signup' %}">Sign Up.</a></p>
+
+{% endblock content %}

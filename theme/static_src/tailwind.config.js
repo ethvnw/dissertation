@@ -5,8 +5,6 @@
  * https://unpkg.com/browse/tailwindcss@latest/stubs/defaultConfig.stub.js
  */
 
-const plugin = require('@tailwindcss/forms');
-
 module.exports = {
     content: [
         /**
@@ -33,9 +31,9 @@ module.exports = {
          * patterns match your project structure.
          */
         /* JS 1: Ignore any JavaScript in node_modules folder. */
-        // '!../../**/node_modules',
+        '!../../**/node_modules',
         /* JS 2: Process all JavaScript files in the project. */
-        // '../../**/*.js',
+        '../../**/*.js',
 
         /**
          * Python: If you use Tailwind CSS classes in Python, uncomment the following line
@@ -45,7 +43,7 @@ module.exports = {
     ],
     theme: {
         fontFamily: {
-        'serif': ['source-serif-pro'],
+            'serif': ['source-serif-pro', 'serif'],
         },
         extend: {
             colors: {
@@ -63,13 +61,8 @@ module.exports = {
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
         require('@tailwindcss/aspect-ratio'),
-
-        plugin(function({addVariant}) {
-            addVariant('not-last', '&:not(:last-child)')
-        })
     ],
     safelist: [
         'errorlist',
     ],
 }
-

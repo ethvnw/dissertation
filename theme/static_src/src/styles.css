@@ -4,25 +4,26 @@
 
 @layer base {
     h1 {
-        @apply font-serif text-2xl;
+        @apply font-serif text-2xl mb-4
     }
 
     h2 {
-        @apply text-xl;
+        @apply text-xl
     }
 
     h3 {
-        @apply text-lg;
+        @apply text-lg
     }
 
-    a:hover {
-        @apply text-uni-violet;
+    a {
+        @apply hover:text-uni-violet cursor-pointer
     }
 
-    .errorlist li {
-        @apply text-red-500 font-semibold text-sm;
+    .errorlist {
+        @apply text-red-500 text-sm font-semibold mt-2
     }
-}
 
-@layer components {
+    input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="true"] {
+        @apply border-red-500
+    }
 }

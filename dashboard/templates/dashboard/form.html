@@ -1,0 +1,28 @@
+{% for field in form %}
+    {% if field.name == "first_name" %}
+        <div class="flex flex-row gap-2">
+            <div>
+                {{ field.label_tag }}
+                {{ field }}
+                {{ field.errors }}
+            </div>
+
+    {% elif field.name == "last_name" %}
+            <div>
+                {{ field.label_tag }}
+                {{ field }} 
+                {{ field.errors }}
+            </div>
+        </div>  
+
+    {% else %}
+        <div>
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.errors }}
+        </div>
+
+{% endif %}
+{% endfor %}
+
+{{ form.non_field_errors }}
