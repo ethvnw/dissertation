@@ -26,4 +26,12 @@
     input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="true"] {
         @apply border-red-500
     }
+
+    #messages-container:has(> .success) {
+        @apply bg-uni-violet/90
+    }
+
+    #messages-container:has(> .error) {
+        @apply bg-red-500/90
+    }
 }

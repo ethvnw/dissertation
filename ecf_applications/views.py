@@ -4,17 +4,20 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from django.forms import formset_factory
-from django.http import HttpRequest, HttpResponse
+from django.forms import formset_factory, modelformset_factory
+from django.http import HttpRequest
+from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, TemplateView, View
+from django.views.generic import DetailView, TemplateView, UpdateView, View
 from formtools.wizard.views import SessionWizardView
 
 from authentication.decorators import secretary_required, student_required
 from authentication.models import Student, User
 from ecf_applications.models import CODES as ECF_CODES
-from ecf_applications.models import ECFApplication, ECFApplicationAssessment, ECFApplicationComment, ECFApplicationAssessmentComment
+from ecf_applications.models import (ECFApplication, ECFApplicationAssessment,
+                                     ECFApplicationAssessmentComment,
+                                     ECFApplicationComment)
 
 from .forms import ECFApplicationAssessmentForm, ECFApplicationForm
 
@@ -133,7 +136,8 @@ class ECFApplicationDetailView(DetailView):
 class CommentSendView(View):
     def post(self, request, *args, **kwargs):
         application = ECFApplication.objects.get(pk=kwargs['pk'])
-        
+        application.status = ECF_CODES['ACTION_REQUIRED']
+        application.save()
 
         for key in request.POST:
             if key.startswith('application'):
@@ -153,3 +157,84 @@ class CommentSendView(View):
         messages.success(request, "Comments sent successfully")
 
         return redirect('ecf_application:detail', pk=application.pk)
+    
+
+@method_decorator(student_required, name="dispatch")
+class ECFApplicationEditView(TemplateView):
+    template_name = "ecf_applications/edit.html"
+
+    def get(self, request, *args, **kwargs):
+        application = ECFApplication.objects.get(pk=kwargs['pk'])
+
+        if application.status != ECF_CODES["ACTION_REQUIRED"]:
+            messages.error(request, "You cannot edit this application")
+            return redirect('ecf_application:detail', pk=application.pk)
+
+        return super().get(request, *args, **kwargs)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["application"] = ECFApplication.objects.get(pk=kwargs['pk'])
+
+        application_comments = ECFApplicationComment.objects.filter(
+            application=self.kwargs['pk'])
+        
+        if application_comments:
+            context["application_comments"] = application_comments
+            context["application_form"] = ECFApplicationForm(instance=context["application"], prefix="application_form")
+
+
+        assessment_comments = ECFApplicationAssessmentComment.objects.filter(
+            assessment__application=self.kwargs['pk'])
+        
+        if assessment_comments:
+            assessments = ECFApplicationAssessment.objects.filter(
+                pk__in=[comment.assessment.pk for comment in assessment_comments]
+            )
+            context["assessments"] = assessments
+
+            assessment_comments_dict = {}
+            for comment in assessment_comments:
+                if comment.assessment.pk in assessment_comments_dict:
+                    assessment_comments_dict[comment.assessment.pk].append(comment)
+                else:
+                    assessment_comments_dict[comment.assessment.pk] = [comment]
+
+            context["assessment_comments_dict"] = assessment_comments_dict
+
+            assessment_formset = modelformset_factory(
+                ECFApplicationAssessment, form=ECFApplicationAssessmentForm, extra=0
+            )
+            context["assessment_formset"] = assessment_formset(queryset=assessments)
+
+        return context 
+    
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+
+        if "application_form" in context:
+            application_form = ECFApplicationForm(
+                request.POST, request.FILES, instance=context["application"], prefix="application_form"
+            )
+
+            if application_form.is_valid():
+                application = application_form.save(commit=False)
+                application.status = ECF_CODES["PENDING"]
+                application.save()
+
+        if "assessment_formset" in context:
+            assessment_formset = modelformset_factory(
+                ECFApplicationAssessment, form=ECFApplicationAssessmentForm, extra=0
+            )(request.POST, queryset=context["assessments"])
+
+            if assessment_formset.is_valid():
+                assessment_formset.save()
+
+        if not "application_form" in context:
+            application = context["application"]
+            application.status = ECF_CODES["PENDING"]
+            application.save()
+
+        return redirect('ecf_application:detail', pk=context["application"].pk)

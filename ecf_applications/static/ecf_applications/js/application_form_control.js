@@ -4,7 +4,6 @@
 var yes = document.getElementById('id_application_form-ongoing_0');
 var no = document.getElementById('id_application_form-ongoing_1');
 var enddate = document.getElementById('id_application_form-end_date');
-enddate.parentElement.classList.add('hidden');
 
 no.onclick = function() {
     enddate.parentElement.classList.remove('hidden');
@@ -14,4 +13,10 @@ no.onclick = function() {
 yes.onclick = function() {
     enddate.parentElement.classList.add('hidden');
     enddate.required = false;
+}
+
+if (enddate.value === '') {
+    yes.click();
+} else {
+    no.click();
 }

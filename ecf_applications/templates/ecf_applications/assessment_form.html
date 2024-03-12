@@ -38,7 +38,7 @@
             <div id="button-container">
                 <button id="add-button" class="mt-2 cursor-pointer text-uni-violet hover:underline">Add Another Module</button>
                 
-                <div class="flex flex-row justify-between mt-4 border-t pt-2 border-gray-300">
+                <div class="flex flex-row justify-between mt-4 pt-2">
                     {% if wizard.steps.prev %}
                         <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" class="px-4 py-2 rounded border border-uni-violet shadow-md hover:bg-uni-violet-hover hover:text-gray-100 hover:shadow-none">Back to First Step</button>
                     {% endif %}

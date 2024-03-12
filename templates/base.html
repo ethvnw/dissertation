@@ -6,12 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock title %} | Sheffield ECF</title>
     <link rel="shortcut icon" href="{% static "imgs/favicon.ico" %}" type="image/x-icon">
-    <link rel="stylesheet" href="{% static "css/index.css" %}">
     <link rel="stylesheet" href="https://use.typekit.net/hgy7jka.css">
     {% tailwind_css %}
     <script src="https://kit.fontawesome.com/c318dff6af.js" crossorigin="anonymous"></script>
 </head>
-<body class="flex flex-col max-w-6xl mx-auto min-h-dvh bg-gray-100 text-gray-900">
+<body class="flex flex-col max-w-7xl mx-auto min-h-dvh bg-gray-100 text-gray-900">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div id="messages-container" class="fixed w-full top-0 left-0 z-50 flex flex-col gap-4 p-4 text-white transition-transform">
+                <p class="max-w-7xl mx-auto {{ message.tags }}">{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <header class="flex flex-row items-center justify-between p-4 mb-4">
         <a href="{% url "index" %}">
             <img class="h-12 md:hidden" src="{% static "imgs/logo_mobile.png" %}" alt="Sheffield ECF logo">
@@ -19,19 +27,22 @@
         </a>
 
         <nav class="flex flex-row gap-8 items-center">
-            <div id="nav-bar" class="absolute h-0 overflow-y-hidden flex flex-col gap-8 top-20 left-0 w-full font-medium text-center bg-gray-100 shadow-md transition-all lg:relative lg:top-0 lg:flex-row lg:shadow-none lg:h-full lg:overflow-y-visible">
+            <div id="nav-bar" class="absolute max-h-0 overflow-y-hidden flex flex-col gap-8 top-20 left-0 w-full font-medium text-center bg-gray-100 shadow-md transition-all ease-in lg:relative lg:top-0 lg:flex-row lg:shadow-none lg:max-h-max lg:overflow-y-visible">
                 <a href="{% url "dashboard" %}">Dashboard</a>
-                <a id="dropdown-button" class="hidden lg:block hover:text-uni-violet hover:cursor-pointer">{{ user }} <i class="fa fa-chevron-down text-uni-violet transition-transform"></i></a>
+                <button class="hidden lg:flex lg:flex-row lg:items-center lg:gap-2" id="dropdown-button">
+                    <p class="hover:text-uni-violet hover:cursor-pointer">{{ request.user }}</p>
+                    <i class="fa fa-chevron-down text-uni-violet transition-transform"></i>
+                </button>
 
-                <div id="dropdown" class="flex flex-col gap-8 lg:absolute lg:right-0 lg:top-10 lg:bg-gray-50 lg:w-full lg:shadow lg:h-0 lg:transition-all lg:overflow-y-hidden lg:rounded">
-                    <a href="{{ request.user.get_absolute_url }}">Profile</a>
-                    <a href="{% url "signout" %}">Sign Out</a>
+                <div id="dropdown" class="flex flex-col gap-8 lg:absolute lg:right-0 lg:top-10 lg:bg-gray-50 lg:w-full lg:shadow-md lg:max-h-0 lg:transition-all lg:ease-in lg:overflow-y-hidden lg:rounded lg:gap-0">
+                    <a class="lg:p-2 lg:py-3 lg:hover:bg-gray-200" href="{% url "profile" %}">Profile</a>
+                    <a class="lg:p-2 lg:py-3 lg:hover:bg-gray-200" href="{% url "signout" %}">Sign Out</a>
                 </div>
             </div>
             
             <div class="flex flex-row gap-6">
                 <button class="relative">
-                    {% if user %}
+                    {% if request.user %}
                         <i class="fa-solid fa-bell text-uni-violet"></i>
                         <span class="absolute bg-red-400 p-1 rounded-full after:absolute after:p-1 after:rounded-full after:right-0 after:top-0 after:bg-red-400 after:animate-ping"></span>
                     {% else %}
@@ -56,5 +67,6 @@
     </footer>
 
     <script src="{% static "js/utils.js" %}"></script>
+    <script src="{% static "js/messages.js" %}"></script>
 </body>
 </html>

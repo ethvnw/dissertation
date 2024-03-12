@@ -29,7 +29,7 @@
     </aside>
     
     <section class="p-4 rounded bg-gray-50 shadow-md w-full">
-        <h2>Details</h2>
+        <h2>Application Details</h2>
 
         <label for="circumstance">Circumstance</label>
         <input type="text" id="circumstance" name="circumstance" class="w-full bg-transparent rounded-sm border border-uni-violet mb-2" value="{{ application.get_circumstance_display }}" disabled>
@@ -51,7 +51,7 @@
 
         {% for assessment in assessments %}
         <div class="border-t pt-4">
-            <h2>Assessment {{ forloop.counter }}</h2>
+            <h2>Assessment {{ forloop.counter }} Details</h2>
             <label for="code">Module Code</label>
             <input type="text" name="code" id="code" value="{{ assessment.module}}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
 

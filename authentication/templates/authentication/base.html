@@ -13,11 +13,11 @@
 
 <body class="flex justify-center items-center flex-col lg:flex-row lg:h-dvh gap-4 lg:gap-20 max-w-7xl lg:mx-auto bg-gray-100 text-gray-900">
     {% if messages %}
-    <ul id="messages-container" class="fixed top-0 left-0 bg-uni-violet/90 w-full p-4 shadow-md text-gray-100 transition-transform z-50 font-medium">
-        {% for message in messages %}
-        <li{% if message.tags %} class="mx-auto max-w-7xl {{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+        <div id="messages-container" class="fixed w-full top-0 left-0 z-50 flex flex-col gap-4 p-4 bg-uni-violet/90 text-white transition-transform">
+            {% for message in messages %}
+                <p class="max-w-7xl mx-auto">{{ message }}</p>
+            {% endfor %}
+        </div>
     {% endif %}
     
     <header class="flex justify-center py-8 lg:w-1/4">

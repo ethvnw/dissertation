@@ -4,7 +4,7 @@ navButton.onclick = () => {
     const navButtonIcon = navButton.querySelector('i');
 
     navBar.classList.toggle('p-4');
-    navBar.classList.toggle('h-0');
+    navBar.classList.toggle('max-h-48');
     navButtonIcon.classList.toggle('fa-bars');
     navButtonIcon.classList.toggle('fa-times');
 }
@@ -12,23 +12,10 @@ navButton.onclick = () => {
 const dropdownButton = document.getElementById('dropdown-button');
 const dropdownToggle = () => {
     const dropdown = document.getElementById('dropdown');
-    
-    if (dropdownButton.lastChild.style.transform === 'rotate(180deg)') {
-        dropdownButton.lastChild.style.transform = ('rotate(0deg)');
-    } else {
-        dropdownButton.lastChild.style.transform = ('rotate(180deg)');
-    }
-    
-    dropdown.classList.toggle('lg:h-0');
-    dropdown.classList.toggle('lg:p-4');
+    const dropdownButtonChevron = dropdownButton.children[1];
+
+    dropdownButtonChevron.style.transform = dropdown.classList.contains('lg:h-0') ? 'rotate(180deg)' : 'rotate(0deg';    
+    dropdown.classList.toggle('lg:max-h-32');
 }
 
 dropdownButton.onclick = dropdownToggle;
-document.documentElement.onclick = (event) => {
-    if (event.target !== dropdownButton) {
-        const dropdown = document.getElementById('dropdown');
-        if (!dropdown.classList.contains('lg:h-0')) {
-            dropdownToggle();
-        }
-    }
-}

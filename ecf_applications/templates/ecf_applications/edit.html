@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Application Details{% endblock %}
+{% block content %}
+
+<div class="flex flex-col lg:flex-row justify-between gap-8">
+    <aside class="w-full">
+        <h1 class="mb-4">Editing Your {{ application.submission_date|date:"d F Y"}} Application.</h1>
+        <h2>Information</h2>
+        <p class="mb-4">
+            <a class="text-uni-violet hover:underline" href="{% url "ecf_application:detail" pk=application.id %}" target="_blank" rel="noopener noreferrer">View Full Application (opens in new tab)</a>
+        </p>
+
+        {% if not application.evidence %}
+        <div class="flex flex-row items-baseline gap-2 mb-4">
+                <i class="fa-solid fa-circle-exclamation text-orange-400"></i>
+                <p class="italic">You have not uploaded any evidence. Please upload it now.</p>
+            </div>
+            
+            <form class="border border-uni-violet rounded p-4 mb-4" action="{% url "ecf_application:detail" pk=application.id %}" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+
+                <label for="evidence">Evidence</label>
+                <input type="file" name="evidence" class="mb-4 block" id="evidence" required>
+
+                <button class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100" type="submit">Upload Evidence</button>
+            </form>
+        {% endif %}
+
+        <p>This application has been flagged as requiring action before it can be forwarded for review.</p>
+        <p class="mb-4">Only the sections that require modification are displayed. Please use the comments provided as guidance before resubmitting.</p>
+        
+
+        {% if application_comments %}
+            <div id="comment-0" class="hidden">
+                <h2>Application Comments</h2>
+                {% for comment in application_comments %}
+                    <p class="italic">{{ comment.user }} on {{ comment.date }}</p>
+                    <p class="mb-2">{{ comment.comment }}</p>    
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for comments_list in assessment_comments_dict.values %}
+            <div id="comment-{{ forloop.counter }}" class="hidden">
+                <h2>Assessment {{ forloop.counter }} Comments</h2>
+                {% for comment in comments_list %}
+                    <p class="italic">{{ comment.user }} on {{ comment.date }}</p>
+                    <p class="mb-2">{{ comment.comment }}</p>    
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </aside>
+    
+    <section class="p-4 rounded bg-gray-50 shadow-md w-full">
+        <form method="post">
+            {% csrf_token %}
+            <input id="current-step" type="hidden" name="current-step">
+            
+            {% if application_form %}
+                <div id="form-0" class="hidden">
+                    <h2>Application Details</h2>
+                    {{ application_form }}
+                </div>
+            {% endif %}
+
+            {{ assessment_formset.management_form }}
+            {% for form in assessment_formset %}
+                <div id="form-{{ forloop.counter }}" class="hidden">
+                    <h2>Assessment {{ forloop.counter }} Details</h2>
+                    {{ form }}        
+                </div>
+            {% endfor %}
+        
+            <div class="flex justify-between items-center mt-4">
+                <button id="back-button" class="px-4 py-2 rounded border border-uni-violet shadow-md hover:bg-uni-violet hover:shadow-none hover:text-gray-100 hidden">Back</button>
+
+                <button id="continue-button" class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100 ml-auto" >Continue</button>
+
+                <button id="submit-button" class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100 hidden" type="submit">Submit Application</button>
+            </div>
+        </form>
+    </section>
+</div>
+
+<script src="{% static "ecf_applications/js/application_form_control.js" %}"></script>
+<script src="{% static "ecf_applications/js/edit_form_control.js" %}"></script>
+{% endblock %}

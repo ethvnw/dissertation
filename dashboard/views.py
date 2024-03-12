@@ -16,7 +16,7 @@ from authentication.models import Student, User
 from ecf_applications.models import CODES as ECF_CODES
 from ecf_applications.models import ECFApplication
 
-from .forms import StaffProfileForm, StudentProfileForm
+from .forms import ProfileForm, StudentProfileForm
 
 
 @login_required
@@ -67,75 +67,53 @@ class DashboardView(TemplateView):
             context["ecf_apps"] = ECFApplication.objects.filter(
                 status=ECF_CODES["PENDING"],
                 applicant__department=self.request.user.department
-            ).order_by("-submission_date")
+            ).order_by("-last_modified")
         
         elif self.request.user.role == User.SCRUTINY:
             context["ecf_apps"] = ECFApplication.objects.filter(
                 status=ECF_CODES["UNDER_REVIEW"],
                 applicant__department=self.request.user.department
-            ).order_by("-submission_date")
+            ).order_by("-last_modified")
             
         else:
             context["ecf_apps"] = ECFApplication.objects.filter(
-                applicant=self.request.user).order_by("-submission_date")
+                applicant=self.request.user).order_by("-last_modified")
         
-        return context
-    
+        return context    
+
 
 @method_decorator(login_required, name="dispatch")
-class UserUpdateView(UpdateView):
-    form_class = StudentProfileForm
-    template_name = "dashboard/student_profile.html"
+class ProfileView(TemplateView):
     model = User
+    template_name = "dashboard/profile.html"
 
-    def get(self, request, *args, **kwargs):
-        if request.user != self.get_object():
-            raise PermissionDenied()
-        
-        if not request.user.role == User.STUDENT:
-            self.form_class = StaffProfileForm
-        
-        return super().get(request, *args, **kwargs)
-    
-    def get_template_names(self):
-            if not self.request.user.role == User.STUDENT:
-                return "dashboard/profile.html"
-            
-            return self.template_name
-
-    def get_success_url(self):
-        messages.success(self.request, "Profile updated successfully")
-        return reverse("profile", kwargs={"pk": self.get_object().pk})
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["form"] = ProfileForm(instance=self.request.user)
 
-        if not self.request.user.role == User.STUDENT:
-            context["form"] = StaffProfileForm(instance=self.get_object())
-            return context
-
-        student = Student.objects.get(user=self.get_object())
-        context["student"] = student
-        context["form"] = StudentProfileForm(
-            instance=self.get_object(),
-            initial={
-                "study_level": student.study_level,
-                "course": student.course,
-                "support_plan": student.support_plan
-            }
-        )
+        if self.request.user.role == User.STUDENT:
+            student = Student.objects.get(user=self.request.user)
+            context["student"] = student
+            context["student_form"] = StudentProfileForm(instance=student)
 
         return context
     
-    def form_valid(self, form):
-        student = Student.objects.get(user=self.get_object())
-        student.study_level = form.cleaned_data["study_level"]
-        student.course = form.cleaned_data["course"]
+    def post(self, request):
+        form = ProfileForm(request.POST, instance=request.user)
 
-        if form.cleaned_data["support_plan"]:
-            student.support_plan = form.cleaned_data["support_plan"]
+        if request.user.role == User.STUDENT:
+            student_form = StudentProfileForm(request.POST, request.FILES, instance=Student.objects.get(user=request.user))
             
-        student.save()
-
-        return super().form_valid(form)
-    
+            if form.is_valid() and student_form.is_valid():
+                form.save()
+                student_form.save()
+                messages.success(request, "Profile updated successfully")
+                return redirect("profile")
+        
+        else:
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile updated successfully")
+                return redirect("profile")
+        
+        return render(request, "dashboard/profile.html", {"form": form})
