@@ -14,13 +14,13 @@
                 <p class="italic">You have not uploaded any evidence. Please upload it now.</p>
             </div>
             
-            <form class="border border-uni-violet rounded p-4 mb-4" enctype="multipart/form-data" method="post">
+            <form class="border border-uni-violet rounded p-4 mb-4 inline-block" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
 
                 <label for="evidence">Evidence</label>
                 <input type="file" name="evidence" class="mb-4 block" id="evidence" required>
 
-                <button class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100" type="submit">Upload Evidence</button>
+                <button class="btn-primary" type="submit">Upload Evidence</button>
             </form>
         {% endif %}
 
@@ -41,11 +41,10 @@
         <textarea name="description" id="description" class="w-full bg-transparent rounded-sm border border-uni-violet mb-2" disabled>{{ application.description }}</textarea>
 
         {% if application.evidence %}
-            <label for="evidence">Evidence</label>
             <form id="evidence" action="{% url "download" %}" method="post" target="_blank">
                 {% csrf_token %}
                 <input type="hidden" name="file" value="{{ application.evidence }}">
-                <button class="border rounded border-uni-violet px-4 py-2 mb-4 shadow-md hover:shadow-none hover:bg-uni-violet hover:text-gray-100" type="submit">Download Evidence</button>
+                <button class="text-uni-violet hover:underline mb-4" type="submit">Download Evidence</button>
             </form>
         {% endif %}
 

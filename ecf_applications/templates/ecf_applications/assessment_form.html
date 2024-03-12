@@ -40,18 +40,15 @@
                 
                 <div class="flex flex-row justify-between mt-4 pt-2">
                     {% if wizard.steps.prev %}
-                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" class="px-4 py-2 rounded border border-uni-violet shadow-md hover:bg-uni-violet-hover hover:text-gray-100 hover:shadow-none">Back to First Step</button>
+                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" class="btn-secondary">Back to First Step</button>
                     {% endif %}
         
-                    <button type="submit" class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none">Submit</button>
+                    <button type="submit" class="btn-primary">Submit</button>
                 </div>
-
             </div>
-
         </form>
-
-        <script src="{% static "ecf_applications/js/module_form_control.js" %}"></script>
     </section>
 </div>
 
+<script src="{% static "ecf_applications/js/module_form_control.js" %}"></script>
 {% endblock %}

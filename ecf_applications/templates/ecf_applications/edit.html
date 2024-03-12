@@ -12,18 +12,18 @@
         </p>
 
         {% if not application.evidence %}
-        <div class="flex flex-row items-baseline gap-2 mb-4">
+            <div class="flex flex-row items-baseline gap-2 mb-4">
                 <i class="fa-solid fa-circle-exclamation text-orange-400"></i>
                 <p class="italic">You have not uploaded any evidence. Please upload it now.</p>
             </div>
             
-            <form class="border border-uni-violet rounded p-4 mb-4" action="{% url "ecf_application:detail" pk=application.id %}" enctype="multipart/form-data" method="post">
+            <form class="border border-uni-violet rounded p-4 mb-4 inline-block" action="{% url "ecf_application:detail" pk=application.id %}" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
 
                 <label for="evidence">Evidence</label>
                 <input type="file" name="evidence" class="mb-4 block" id="evidence" required>
 
-                <button class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100" type="submit">Upload Evidence</button>
+                <button class="btn-primary" type="submit">Upload Evidence</button>
             </form>
         {% endif %}
 
@@ -73,11 +73,11 @@
             {% endfor %}
         
             <div class="flex justify-between items-center mt-4">
-                <button id="back-button" class="px-4 py-2 rounded border border-uni-violet shadow-md hover:bg-uni-violet hover:shadow-none hover:text-gray-100 hidden">Back</button>
+                <button id="back-button" class="btn-secondary hidden">Back</button>
 
-                <button id="continue-button" class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100 ml-auto" >Continue</button>
+                <button id="continue-button" class="btn-primary ml-auto" >Continue</button>
 
-                <button id="submit-button" class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100 hidden" type="submit">Submit Application</button>
+                <button id="submit-button" class="btn-primary hidden" type="submit">Submit Application</button>
             </div>
         </form>
     </section>

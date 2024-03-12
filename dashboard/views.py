@@ -64,8 +64,13 @@ class DashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         if self.request.user.role == User.SECRETARY:
-            context["ecf_apps"] = ECFApplication.objects.filter(
+            context["attention_apps"] = ECFApplication.objects.filter(
                 status=ECF_CODES["PENDING"],
+                applicant__department=self.request.user.department
+            ).order_by("-last_modified")
+
+            context["other_apps"] = ECFApplication.objects.filter(
+                status=ECF_CODES["ACTION_REQUIRED"],
                 applicant__department=self.request.user.department
             ).order_by("-last_modified")
         

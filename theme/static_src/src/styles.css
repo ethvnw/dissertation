@@ -18,6 +18,14 @@
     a {
         @apply hover:text-uni-violet cursor-pointer
     }
+    
+    .btn-primary { 
+        @apply px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md font-medium hover:bg-uni-violet-hover hover:shadow-none
+    }
+
+    .btn-secondary {
+        @apply px-4 py-2 rounded border-2 border-uni-violet shadow-md font-medium hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100
+    }
 
     .errorlist {
         @apply text-red-500 text-sm font-semibold mt-2

@@ -49,11 +49,7 @@ class ECFApplication(models.Model):
     last_modified = models.DateTimeField("last modified", auto_now=True)
 
     def get_absolute_url(self):
-        if self.status == CODES["ACTION_REQUIRED"]:
-            return reverse("ecf_application:edit", kwargs={"pk": self.pk})
-        
         return reverse("ecf_application:detail", kwargs={"pk": self.pk})
-    
 
     
 class ECFApplicationAssessment(models.Model):

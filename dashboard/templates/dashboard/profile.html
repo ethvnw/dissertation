@@ -11,12 +11,12 @@
 
         {% if student.support_plan %}
             <h2 class="mb-2">Support Plan</h2>
-            <p>You currently have an uploaded support plan on file.</p>
+            <p class="mb-2">You currently have an uploaded support plan on file.</p>
 
             <form action="{% url "download" %}" method="post" target="_blank">
                 {% csrf_token %}
                 <input type="hidden" name="file" value="{{ student.support_plan }}">
-                <button class="border rounded border-uni-violet mt-4 px-4 py-2 shadow-md hover:shadow-none hover:bg-uni-violet hover:text-gray-100" type="submit">Download Support Plan</button>
+                <button class="btn-secondary" type="submit">Download Support Plan</button>
             </form>
         {% endif %}
     </aside>
@@ -27,7 +27,7 @@
             {% csrf_token %}
             {{ form }}
             {{ student_form }}
-            <button class="bg-uni-violet rounded text-gray-100 mt-4 px-4 py-2 shadow-md hover:shadow-none hover:bg-uni-violet-hover w-full" type="submit">Update</button>
+            <button class="btn-primary w-full" type="submit">Update</button>
         </form>
     </section>
 </div>

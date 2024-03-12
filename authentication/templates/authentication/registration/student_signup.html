@@ -6,7 +6,7 @@
 <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
     {{ form}}
-    <button class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none w-full" type="submit">Sign Up</button>
+    <button class="btn-primary w-full" type="submit">Sign Up</button>
 </form>
 
 <p class="text-center mt-4">Already have an account? <a class="text-uni-violet font-semibold hover:underline" href="{% url 'signin' %}">Sign In.</a></p>

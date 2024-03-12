@@ -6,13 +6,13 @@
 <div class="border border-uni-violet rounded">
     <div class="flex flex-row items-center justify-between p-4">
         <h2>Recent Applications</h2>
-        <a class="px-4 py-2 rounded text-gray-100 bg-uni-violet shadow-md hover:bg-uni-violet-hover hover:shadow-none hover:text-gray-100" href="{% url "ecf_application:new" %}">New Application</a>
+        <a class="btn-primary hover:text-gray-100" href="{% url "ecf_application:new" %}">New Application</a>
     </div>
 
     <ul>
         {% for app in ecf_apps %}
         <li class="border-b rounded hover:bg-gray-200 p-4 first:border-t last:border-0">
-            <a href="{{ app.get_absolute_url }}" class=" flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+            <a href="{% if app.status == 1 %} {{ app.get_absolute_url }} {% else %} {% url "ecf_application:edit" pk=app.id %} {% endif %}" class=" flex flex-col md:flex-row md:justify-between md:items-center gap-2">
                 <div>
                     <p>{{ app.get_circumstance_display }}</p>
                     <p class="text-sm">Submitted: {{ app.submission_date|date:"d F Y"}}</p>
