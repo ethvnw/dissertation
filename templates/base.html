@@ -10,60 +10,87 @@
     {% tailwind_css %}
     <script src="https://kit.fontawesome.com/c318dff6af.js" crossorigin="anonymous"></script>
 </head>
-<body class="flex flex-col max-w-7xl mx-auto min-h-dvh bg-gray-100 text-gray-900">
 
+<body class="flex flex-col max-w-7xl mx-auto min-h-dvh p-4 bg-gray-100 text-gray-900">
     {% if messages %}
         {% for message in messages %}
-            <div id="messages-container" class="fixed w-full top-0 left-0 z-50 flex flex-col gap-4 p-4 text-white transition-transform">
+            <div id="messages-container" class="fixed w-full top-0 left-0 z-50 flex flex-col gap-2 p-4 text-gray-100 transition-transform">
                 <p class="max-w-7xl mx-auto {{ message.tags }}">{{ message }}</p>
             </div>
         {% endfor %}
     {% endif %}
 
-    <header class="flex flex-row items-center justify-between p-4 mb-4">
-        <a href="{% url "index" %}">
-            <img class="h-12 md:hidden" src="{% static "imgs/logo_mobile.png" %}" alt="Sheffield ECF logo">
-            <img class="h-12 hidden md:block" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
-        </a>
+    <header class="flex items-center justify-between mb-4">
+        <div class="flex-shrink-0">
+            <a href="{% url "index" %}">
+                <img class="h-12 md:hidden" src="{% static "imgs/logo_mobile.png" %}" alt="Sheffield ECF logo">
+                <img class="h-12 hidden md:block" src="{% static "imgs/logo.png" %}" alt="Sheffield ECF logo">
+            </a>
+        </div>
 
-        <nav class="flex flex-row gap-8 items-center">
-            <div id="nav-bar" class="absolute max-h-0 overflow-y-hidden flex flex-col gap-8 top-20 left-0 w-full font-medium text-center bg-gray-100 shadow-md transition-all ease-in lg:relative lg:top-0 lg:flex-row lg:shadow-none lg:max-h-max lg:overflow-y-visible">
-                <a href="{% url "dashboard" %}">Dashboard</a>
-                <button class="hidden lg:flex lg:flex-row lg:items-center lg:gap-2" id="dropdown-button">
-                    <p class="hover:text-uni-violet hover:cursor-pointer">{{ request.user }}</p>
+        <nav class="flex justify-end lg:relative">
+            <div id="nav-bar" class="absolute top-20 left-0 max-h-0 overflow-y-hidden transition-all w-full flex flex-col bg-gray-50 shadow-lg font-semibold lg:max-h-fit lg:relative lg:top-0 lg:overflow-y-visible lg:flex-row lg:shadow-none lg:gap-4 lg:mr-8 lg:bg-transparent">
+                <a class="py-4" href="{% url "dashboard" %}">Dashboard</a>
+                <button id="dropdown-button" class="hidden lg:flex lg:items-center lg:gap-2 hover:text-uni-violet">
+                    <p>{{ request.user }}</p> 
                     <i class="fa fa-chevron-down text-uni-violet transition-transform"></i>
                 </button>
-
-                <div id="dropdown" class="flex flex-col gap-8 lg:absolute lg:right-0 lg:top-10 lg:bg-gray-50 lg:w-full lg:shadow-md lg:max-h-0 lg:transition-all lg:ease-in lg:overflow-y-hidden lg:rounded lg:gap-0">
-                    <a class="lg:p-2 lg:py-3 lg:hover:bg-gray-200" href="{% url "profile" %}">Profile</a>
-                    <a class="lg:p-2 lg:py-3 lg:hover:bg-gray-200" href="{% url "signout" %}">Sign Out</a>
+                
+                <div id="dropdown" class="flex flex-col lg:absolute lg:top-16 lg:right-0 lg:max-h-0 lg:overflow-y-hidden lg:bg-gray-50 lg:shadow-lg lg:w-full lg:px-4 lg:rounded transition-all">
+                    <a class="py-4" href="{% url "profile" %}">Profile</a>
+                    <a class="py-4" href="{% url "signout" %}">Sign Out</a>
                 </div>
+
             </div>
             
-            <div class="flex flex-row gap-6">
-                <button class="relative">
-                    {% if request.user %}
-                        <i class="fa-solid fa-bell text-uni-violet"></i>
+            <div id="notifications" class="absolute top-20 left-0 max-h-0 overflow-y-hidden transition-all w-full flex flex-col bg-gray-50 shadow-lg font-semibold lg:w-96 lg:left-auto lg:top-16 lg:rounded">
+                <div class="flex justify-between p-4">
+                    <h2>Notifications</h2>
+                    <form action="{% url "mark_read" %}" method="post">
+                        {% csrf_token %}
+                        <button id="mark-read-button" type="submit" class="text-uni-violet hover:underline">Mark all as read</button>
+                    </form>
+                </div>
+
+                {% for notification in notifications %}
+                    <a href="{% if notification.application.status == 1 %} {{ notification.application.get_absolute_url }} {% else %} {% url "ecf_application:edit" pk=notification.application.id %} {% endif %}" class="flex items-center gap-4 font-normal px-4 py-2 mb-2 last:mb-0 hover:bg-gray-200">
+                        {% if not notification.viewed %}
+                            <i class="fa-solid fa-circle fa-2xs text-uni-violet"></i>
+                        {% endif %}
+                        
+                        <div class="{% if notification.viewed %} text-gray-500 {% endif %}">
+                            <p>{{ notification.message }}</p>
+                            <p class="text-sm">{{ notification.created_at }}</p>
+                        </div>
+                    </a>
+                {% empty %}
+                    <p class="p-4">No notifications</p>
+                {% endfor %}
+            </div>
+
+            <div class="flex gap-8">
+                <button id="notification-button">
+                    {% if unread_notifications %}
+                        <i id="notification-bell" class="fa-solid fa-bell text-uni-violet"></i>
                         <span class="absolute bg-red-400 p-1 rounded-full after:absolute after:p-1 after:rounded-full after:right-0 after:top-0 after:bg-red-400 after:animate-ping"></span>
                     {% else %}
-                        <i class="fa-regular fa-bell text-uni-violet"></i>
+                        <i id="notification-bell" class="fa-regular fa-bell text-uni-violet"></i>
                     {% endif %}
                 </button>
-                
+
                 <button id="nav-button" class="lg:hidden">
                     <i class="fa-solid fa-bars w-5"></i>
                 </button>
             </div>
         </nav>
     </header>
-    
-    <main class="flex-grow px-4 mb-4">
-        {% block content %}
-        {% endblock content %}
+
+    <main class="flex-grow mb-4">
+        {% block content %}{% endblock content %}
     </main>
 
     <footer>
-        <p class="my-4 text-center text-gray-500">&copy; 2024 Ethan Watts</p>
+        <p class="text-center text-sm text-gray-500">&copy; 2024 Ethan Watts</p>
     </footer>
 
     <script src="{% static "js/utils.js" %}"></script>

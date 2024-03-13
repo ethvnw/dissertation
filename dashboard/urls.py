@@ -7,4 +7,5 @@ urlpatterns = [
     path("download/", views.DownloadView.as_view(), name="download"),
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path("profile/", views.ProfileView.as_view(), name="profile"),
+    path("mark_read", views.NotificationMarkReadView.as_view(), name="mark_read"),
 ]

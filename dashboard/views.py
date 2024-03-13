@@ -13,6 +13,7 @@ from django_sendfile import sendfile
 
 from authentication.decorators import student_required
 from authentication.models import Student, User
+from dashboard.models import Notification
 from ecf_applications.models import CODES as ECF_CODES
 from ecf_applications.models import ECFApplication
 
@@ -122,3 +123,12 @@ class ProfileView(TemplateView):
                 return redirect("profile")
         
         return render(request, "dashboard/profile.html", {"form": form})
+
+
+@method_decorator(login_required, name="dispatch")
+class NotificationMarkReadView(View):
+    def post(self, request):
+        notifications = Notification.objects.filter(user=request.user, viewed=False)
+        notifications.update(viewed=True)
+        
+        return redirect(request.META.get('HTTP_REFERER', 'dashboard'))

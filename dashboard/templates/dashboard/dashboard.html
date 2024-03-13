@@ -9,13 +9,11 @@
         <a class="btn-primary hover:text-gray-100" href="{% url "ecf_application:new" %}">New Application</a>
     </div>
 
-    <ul>
-        {% for app in ecf_apps %}
-        <li class="border-b rounded hover:bg-gray-200 p-4 first:border-t last:border-0">
-            <a href="{% if app.status == 1 %} {{ app.get_absolute_url }} {% else %} {% url "ecf_application:edit" pk=app.id %} {% endif %}" class=" flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-                <div>
-                    <p>{{ app.get_circumstance_display }}</p>
-                    <p class="text-sm">Submitted: {{ app.submission_date|date:"d F Y"}}</p>
+    {% for app in ecf_apps %}
+        <a class="flex justify-between items-center gap-3 p-4 hover:bg-gray-200 border-t" href="{% if app.status == 1 %} {{ app.get_absolute_url }} {% else %} {% url "ecf_application:edit" pk=app.id %} {% endif %}">
+            <div>
+                <p>{{ app.get_circumstance_display }}</p>
+                <p class="text-sm">Submitted: {{ app.submission_date|date:"d F Y" }}</p>
 
                 {% if app.evidence == "" %}
                     <div class="flex flex-row items-baseline gap-2">
@@ -23,12 +21,10 @@
                         <p class="italic">Evidence has not been uploaded.</p>
                     </div>
                 {% endif %}
-                </div>
-                <p class="font-semibold">{{ app.get_status_display|upper }}</p>
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
+            </div>
+            <p class="font-semibold text-right">{{ app.get_status_display|upper }}</p>
+        </a>
+    {% endfor %}
 </div>
     
 {% endblock content %}

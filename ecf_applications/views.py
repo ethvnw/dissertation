@@ -5,15 +5,16 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.forms import formset_factory, modelformset_factory
-from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, TemplateView, UpdateView, View
+from django.utils.formats import date_format
+from django.views.generic import DetailView, TemplateView, View
 from formtools.wizard.views import SessionWizardView
 
 from authentication.decorators import secretary_required, student_required
 from authentication.models import Student, User
+from dashboard.models import Notification
 from ecf_applications.models import CODES as ECF_CODES
 from ecf_applications.models import (ECFApplication, ECFApplicationAssessment,
                                      ECFApplicationAssessmentComment,
@@ -133,6 +134,22 @@ class ECFApplicationDetailView(DetailView):
         
 
 @method_decorator(secretary_required, name="dispatch")
+class EvidenceReminderView(View):
+    def post(self, request, *args, **kwargs):
+        application = ECFApplication.objects.get(pk=kwargs['pk'])
+        
+        date = date_format(application.submission_date, "d F Y")
+        Notification.objects.create(
+            application=application,
+            user=application.applicant,
+            message=f"Please upload evidence for your {date} application"
+        )
+        messages.success(request, "Reminder sent successfully")
+
+        return redirect('ecf_application:detail', pk=application.pk)
+
+
+@method_decorator(secretary_required, name="dispatch")
 class CommentSendView(View):
     def post(self, request, *args, **kwargs):
         application = ECFApplication.objects.get(pk=kwargs['pk'])
@@ -154,6 +171,12 @@ class CommentSendView(View):
                     comment=request.POST[key]
                 )
 
+        date = date_format(application.submission_date, "d F Y")
+        Notification.objects.create(
+            application=application,
+            user=application.applicant,
+            message=f"Your {date} application has new comments"
+        )
         messages.success(request, "Comments sent successfully")
 
         return redirect('ecf_application:detail', pk=application.pk)

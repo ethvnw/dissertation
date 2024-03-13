@@ -9,5 +9,6 @@ urlpatterns = [
     path("success/", views.ECFApplicationSuccessView.as_view(), name="success"),
     path("detail/<int:pk>/", views.ECFApplicationDetailView.as_view(), name="detail"),
     path("comment/<int:pk>/", views.CommentSendView.as_view(), name="comment"),
+    path("reminder/<int:pk>/", views.EvidenceReminderView.as_view(), name="reminder"),
     path("edit/<int:pk>/", views.ECFApplicationEditView.as_view(), name="edit"),
 ]
