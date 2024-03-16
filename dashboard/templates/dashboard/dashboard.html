@@ -24,6 +24,8 @@
             </div>
             <p class="font-semibold text-right">{{ app.get_status_display|upper }}</p>
         </a>
+    {% empty %}
+        <p class="p-4 border-t">You have no applications.</p>
     {% endfor %}
 </div>
     

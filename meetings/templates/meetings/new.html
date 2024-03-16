@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}New Meeting{% endblock %}
+{% block content %}
+
+<div class="flex flex-col lg:flex-row justify-between gap-8">
+    <aside class="w-full">
+        <h1 class="mb-4">New Meeting.</h1>
+        <h2>Information</h2>
+
+        <p>There are {{ num_scrutiny_apps }} applications needing scrutiny panel consideration.</p>
+        <p>There are {{ num_exam_apps }} applications needing exam board consideration.</p>
+
+    </aside>
+    
+    <section class="p-4 rounded bg-gray-50 shadow-md w-full">
+        <h2>Details</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button class="btn-primary" type="submit">Submit</button>
+        </form>
+    </section>
+</div>
+
+{% endblock %}

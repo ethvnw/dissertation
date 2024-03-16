@@ -1,4 +1,4 @@
-from typing import Any
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -16,6 +16,7 @@ from authentication.models import Student, User
 from dashboard.models import Notification
 from ecf_applications.models import CODES as ECF_CODES
 from ecf_applications.models import ECFApplication
+from meetings.models import Meeting
 
 from .forms import ProfileForm, StudentProfileForm
 
@@ -74,6 +75,10 @@ class DashboardView(TemplateView):
                 status=ECF_CODES["ACTION_REQUIRED"],
                 applicant__department=self.request.user.department
             ).order_by("-last_modified")
+
+            context["meetings"] = Meeting.objects.filter(
+                date_time__gte=datetime.now()
+            ).order_by("date_time")
         
         elif self.request.user.role == User.SCRUTINY:
             context["ecf_apps"] = ECFApplication.objects.filter(

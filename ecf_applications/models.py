@@ -4,17 +4,19 @@ from django.db import models
 from django.urls import reverse
 
 CODES = {
-    "PENDING": 1,
-    "ACTION_REQUIRED": 2,
-    "UNDER_REVIEW": 3,
-    "REJECTED": 4,
-    "APPROVED": 5,
+    "PENDING": 1, # first submitted / not assigned to meeting
+    "ACTION_REQUIRED": 2, # student needs to edit details
+    "UNDER_REVIEW": 3, # assigned to scrutiny meeting
+    "UNDER_EXAM_REVIEW": 4, # assigned to exam board meeting
+    "REJECTED": 5,
+    "APPROVED": 6,
 }
 
 STATUS_CHOICES = [
     (CODES["PENDING"], "Pending"),
     (CODES["ACTION_REQUIRED"], "Action Required"),
     (CODES["UNDER_REVIEW"], "Under Review"),
+    (CODES["UNDER_EXAM_REVIEW"], "Under Exam Board Review"),
     (CODES["REJECTED"], "Rejected"),
     (CODES["APPROVED"], "Approved"),
 ]
@@ -59,13 +61,20 @@ class ECFApplicationAssessment(models.Model):
     module = models.CharField("module code", max_length=15)
     assessment = models.CharField("assessment name", max_length=200)
 
+    AUTHORISED_ABSENCE = 1
+    EXAM_BOARD_CONSIDERATION = 2
+    EXTENSION = 3
+    LATE_PENALTY_REMOVAL = 4
+    NOT_ASSESSED = 5
+    OTHER = 6
+
     ACTION_CHOICES = [
-        (1, 'Authorised Absence'),
-        (2, 'Exam Board Consideration'),
-        (3, 'Extension'),
-        (4, 'Late Penalty Removal'),
-        (5, 'Not Assessed'),
-        (6, 'Other'),
+        (AUTHORISED_ABSENCE, "Authorised Absence"),
+        (EXAM_BOARD_CONSIDERATION, "Exam Board Consideration"),
+        (EXTENSION, "Extension"),
+        (LATE_PENALTY_REMOVAL, "Late Penalty Removal"),
+        (NOT_ASSESSED, "Not Assessed"),
+        (OTHER, "Other"),
     ]
     action = models.PositiveSmallIntegerField("action", choices=ACTION_CHOICES)
 

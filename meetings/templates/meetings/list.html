@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load filters %}
+{% block title %}Meetings List{% endblock title %}
+{% block content %}
+
+<h1 class="mb-8">Viewing All Meetings.</h1>
+<div class="border border-uni-violet rounded mb-4">
+    <div class="flex flex-row items-center justify-between p-4">
+        <h2>Scrutiny Panel Meetings</h2>
+        <a class="btn-primary hover:text-gray-100" href="{% url "meetings:new" %}">New Meeting</a>
+    </div>
+
+    {% for meeting in scrutiny_meetings %}
+        <a class="block p-4 hover:bg-gray-200 border-t rounded" href="{{ meeting.get_absolute_url }}">
+            <p class="">{{ meeting.date_time|date:"d F Y H:i" }}</p>
+            <p class="text-sm">Created by {{ meeting.creator }}</p>
+            <p class="text-sm">This meeting's agenda has {{ scrutiny_meeting_agendas|get_item:meeting.id }} items</p>
+        </a>
+    {% empty %}
+        <p class="p-4 border-t">There are no meetings.</p>
+    {% endfor %}
+</div>
+
+<div class="border border-uni-violet rounded">
+    <div class="flex flex-row items-center justify-between p-4">
+        <h2>Exam Board Meetings</h2>
+        <a class="btn-primary hover:text-gray-100" href="{% url "meetings:new" %}">New Meeting</a>
+    </div>
+
+    {% for meeting in exam_meetings %}
+        <a class="block p-4 hover:bg-gray-200 border-t rounded" href="{{ meeting.get_absolute_url }}">
+            <p class="">{{ meeting.date_time|date:"d F Y H:i" }}</p>
+            <p class="text-sm">Created by {{ meeting.creator }}</p>
+            <p class="text-sm">This meeting's agenda has {{ exam_meeting_agendas|get_item:meeting.id }} items</p>
+        </a>
+    {% empty %}
+        <p class="p-4 border-t">There are no meetings.</p>
+    {% endfor %}
+</div>
+    
+    
+{% endblock content %}

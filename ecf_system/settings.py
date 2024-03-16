@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'authentication',
     'dashboard',
     'ecf_applications',
+    'meetings'
 ]
 
 MIDDLEWARE = [

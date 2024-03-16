@@ -31,14 +31,17 @@
         <nav class="flex justify-end lg:relative">
             <div id="nav-bar" class="absolute top-20 left-0 max-h-0 overflow-y-hidden transition-all w-full flex flex-col bg-gray-50 shadow-lg font-semibold lg:max-h-fit lg:relative lg:top-0 lg:overflow-y-visible lg:flex-row lg:shadow-none lg:gap-4 lg:mr-8 lg:bg-transparent">
                 <a class="py-4" href="{% url "dashboard" %}">Dashboard</a>
+                {% if request.user.role == 2%}
+                    <a class="py-4" href="{% url "meetings:list" %}">Meetings</a>
+                {% endif %}
                 <button id="dropdown-button" class="hidden lg:flex lg:items-center lg:gap-2 hover:text-uni-violet">
                     <p>{{ request.user }}</p> 
                     <i class="fa fa-chevron-down text-uni-violet transition-transform"></i>
                 </button>
                 
-                <div id="dropdown" class="flex flex-col lg:absolute lg:top-16 lg:right-0 lg:max-h-0 lg:overflow-y-hidden lg:bg-gray-50 lg:shadow-lg lg:w-full lg:px-4 lg:rounded transition-all">
-                    <a class="py-4" href="{% url "profile" %}">Profile</a>
-                    <a class="py-4" href="{% url "signout" %}">Sign Out</a>
+                <div id="dropdown" class="flex flex-col lg:absolute lg:top-16 lg:right-0 lg:max-h-0 lg:overflow-y-hidden lg:bg-gray-50 lg:shadow-lg lg:w-full lg:rounded transition-all">
+                    <a class="py-4 lg:p-4 lg:hover:bg-gray-200" href="{% url "profile" %}">Profile</a>
+                    <a class="py-4 lg:p-4 lg:hover:bg-gray-200" href="{% url "signout" %}">Sign Out</a>
                 </div>
 
             </div>

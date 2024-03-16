@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load filters %}
+{% block title %}Meeting Details{% endblock %}
+{% block content %}
+
+<div class="flex flex-col lg:flex-row justify-between gap-8">
+    <aside class="w-full">
+        <h1 class="mb-4">{{ meeting.date_time|date:"d F Y" }} {{ meeting.get_category_display }} Details</h1>
+        <h2>Information</h2>
+        {% if meeting.date_time|in_the_future %}
+            <p>This meeting is on {{ meeting.date_time }}</p>
+        {% else %}
+            <p>This meeting was on {{ meeting.date_time }}</p>
+        {% endif %}
+
+        <p>The agenda has {{ agendas.count }} items.</p>
+
+    </aside>
+    
+    <section class="border border-uni-violet rounded w-full">
+        <h2 class="p-4">Agenda</h2>
+        {% for agenda in agendas %}
+            <a class="block p-4 hover:bg-gray-200 border-t rounded" href="{{ agenda.application.get_absolute_url }}">
+                <p>{{ agenda.application.get_circumstance_display }}</p>
+                <p class="text-sm">Submitted on: {{ agenda.application.submission_date }}</p>
+                <p class="text-sm">ID: {{ agenda.application.id }}</p>
+            </a>
+        {% endfor %}
+    </section>
+</div>
+
+{% endblock %}
