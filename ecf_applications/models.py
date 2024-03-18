@@ -10,6 +10,7 @@ CODES = {
     "UNDER_EXAM_REVIEW": 4, # assigned to exam board meeting
     "REJECTED": 5,
     "APPROVED": 6,
+    "PARTIAL_APPROVAL": 7,
 }
 
 STATUS_CHOICES = [
@@ -19,6 +20,7 @@ STATUS_CHOICES = [
     (CODES["UNDER_EXAM_REVIEW"], "Under Exam Board Review"),
     (CODES["REJECTED"], "Rejected"),
     (CODES["APPROVED"], "Approved"),
+    (CODES["PARTIAL_APPROVAL"], "Partially Approved"),
 ]
 
 class ECFApplication(models.Model):

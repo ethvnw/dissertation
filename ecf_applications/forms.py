@@ -1,5 +1,5 @@
 from django import forms
-from django.db import transaction
+from django.utils import timezone
 
 from .models import ECFApplication, ECFApplicationAssessment
 
@@ -52,6 +52,23 @@ class ECFApplicationForm(forms.ModelForm):
         required=False,
         widget=forms.FileInput()
     )
+
+
+    def clean_start_date(self):
+        start_date = self.cleaned_data.get('start_date')
+
+        if start_date and start_date > timezone.localdate():
+            raise forms.ValidationError("Start date cannot be in the future.")
+        return start_date
+
+    def clean_end_date(self):
+        start_date = self.cleaned_data.get('start_date')
+        end_date = self.cleaned_data.get('end_date')
+
+        if start_date and end_date:
+            if start_date > end_date:
+                raise forms.ValidationError("End date should be after start date.")
+        return end_date
 
     class Meta:
         model = ECFApplication

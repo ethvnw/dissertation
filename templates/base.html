@@ -20,7 +20,7 @@
         {% endfor %}
     {% endif %}
 
-    <header class="flex items-center justify-between mb-4">
+    <header class="flex items-center justify-between mb-8">
         <div class="flex-shrink-0">
             <a href="{% url "index" %}">
                 <img class="h-12 md:hidden" src="{% static "imgs/logo_mobile.png" %}" alt="Sheffield ECF logo">
@@ -29,17 +29,21 @@
         </div>
 
         <nav class="flex justify-end lg:relative">
-            <div id="nav-bar" class="absolute top-20 left-0 max-h-0 overflow-y-hidden transition-all w-full flex flex-col bg-gray-50 shadow-lg font-semibold lg:max-h-fit lg:relative lg:top-0 lg:overflow-y-visible lg:flex-row lg:shadow-none lg:gap-4 lg:mr-8 lg:bg-transparent">
+            <div id="nav-bar" class="absolute top-20 left-0 max-h-0 overflow-y-hidden transition-all w-full flex flex-col bg-gray-50 shadow-lg font-semibold lg:max-h-fit lg:relative lg:top-0 lg:overflow-y-visible lg:flex-row lg:shadow-none lg:gap-8 lg:bg-transparent">
+
                 <a class="py-4" href="{% url "dashboard" %}">Dashboard</a>
-                {% if request.user.role == 2%}
+
+                {% if request.user.role == 2 or request.user.role == 3 %}
                     <a class="py-4" href="{% url "meetings:list" %}">Meetings</a>
+                    <a class="py-4" href="{% url "ecf_application:list" %}">ECF Applications</a>
                 {% endif %}
+                
                 <button id="dropdown-button" class="hidden lg:flex lg:items-center lg:gap-2 hover:text-uni-violet">
                     <p>{{ request.user }}</p> 
                     <i class="fa fa-chevron-down text-uni-violet transition-transform"></i>
                 </button>
                 
-                <div id="dropdown" class="flex flex-col lg:absolute lg:top-16 lg:right-0 lg:max-h-0 lg:overflow-y-hidden lg:bg-gray-50 lg:shadow-lg lg:w-full lg:rounded transition-all">
+                <div id="dropdown" class="flex flex-col lg:absolute lg:top-16 lg:right-0 lg:max-h-0 lg:overflow-y-hidden lg:bg-gray-50 lg:shadow-lg lg:w-48 lg:rounded transition-all">
                     <a class="py-4 lg:p-4 lg:hover:bg-gray-200" href="{% url "profile" %}">Profile</a>
                     <a class="py-4 lg:p-4 lg:hover:bg-gray-200" href="{% url "signout" %}">Sign Out</a>
                 </div>
@@ -56,7 +60,7 @@
                 </div>
 
                 {% for notification in notifications %}
-                    <a href="{% if notification.application.status == 1 %} {{ notification.application.get_absolute_url }} {% else %} {% url "ecf_application:edit" pk=notification.application.id %} {% endif %}" class="flex items-center gap-4 font-normal px-4 py-2 mb-2 last:mb-0 hover:bg-gray-200">
+                    <a href="{{ notification.application.get_absolute_url }}" class="flex items-center gap-4 font-normal px-4 py-2 mb-2 last:mb-0 hover:bg-gray-200">
                         {% if not notification.viewed %}
                             <i class="fa-solid fa-circle fa-2xs text-uni-violet"></i>
                         {% endif %}
@@ -72,14 +76,16 @@
             </div>
 
             <div class="flex gap-8">
-                <button id="notification-button">
-                    {% if unread_notifications %}
-                        <i id="notification-bell" class="fa-solid fa-bell text-uni-violet"></i>
-                        <span class="absolute bg-red-400 p-1 rounded-full after:absolute after:p-1 after:rounded-full after:right-0 after:top-0 after:bg-red-400 after:animate-ping"></span>
-                    {% else %}
-                        <i id="notification-bell" class="fa-regular fa-bell text-uni-violet"></i>
-                    {% endif %}
-                </button>
+                {% if request.user.role != 3 %}
+                    <button class="lg:ml-8" id="notification-button">
+                        {% if unread_notifications %}
+                            <i id="notification-bell" class="fa-solid fa-bell text-uni-violet"></i>
+                            <span class="absolute bg-red-400 p-1 rounded-full after:absolute after:p-1 after:rounded-full after:right-0 after:top-0 after:bg-red-400 after:animate-ping"></span>
+                        {% else %}
+                            <i id="notification-bell" class="fa-regular fa-bell text-uni-violet"></i>
+                        {% endif %}
+                    </button>
+                {% endif %}
 
                 <button id="nav-button" class="lg:hidden">
                     <i class="fa-solid fa-bars w-5"></i>
@@ -88,7 +94,7 @@
         </nav>
     </header>
 
-    <main class="flex-grow mb-4">
+    <main class="flex-grow mb-8">
         {% block content %}{% endblock content %}
     </main>
 

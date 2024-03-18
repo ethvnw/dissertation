@@ -1,17 +1,14 @@
-from datetime import datetime
+from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView, View
-from django.views.generic.edit import UpdateView
 from django_sendfile import sendfile
 
-from authentication.decorators import student_required
 from authentication.models import Student, User
 from dashboard.models import Notification
 from ecf_applications.models import CODES as ECF_CODES
@@ -77,14 +74,24 @@ class DashboardView(TemplateView):
             ).order_by("-last_modified")
 
             context["meetings"] = Meeting.objects.filter(
-                date_time__gte=datetime.now()
-            ).order_by("date_time")
-        
+                date_time__gte=timezone.now()
+            ).order_by("date_time")[:2]
+
+            context["ongoing_meeting"] = Meeting.objects.filter(
+                date_time__lte=timezone.now(),
+                date_time__gte=timezone.now() - timedelta(hours=1.5)
+            ).first()
+
+
         elif self.request.user.role == User.SCRUTINY:
-            context["ecf_apps"] = ECFApplication.objects.filter(
-                status=ECF_CODES["UNDER_REVIEW"],
-                applicant__department=self.request.user.department
-            ).order_by("-last_modified")
+            context["meetings"] = Meeting.objects.filter(
+                date_time__gte=timezone.now()
+            ).order_by("date_time")[:2]
+
+            context["ongoing_meeting"] = Meeting.objects.filter(
+                date_time__lte=timezone.now(),
+                date_time__gte=timezone.now() - timedelta(hours=1.5)
+            ).first()
             
         else:
             context["ecf_apps"] = ECFApplication.objects.filter(

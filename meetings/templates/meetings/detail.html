@@ -15,7 +15,11 @@
             <p>This meeting was on {{ meeting.date_time }}</p>
         {% endif %}
 
-        <p>The agenda has {{ agendas.count }} items.</p>
+        <p>This meeting has {{ agendas.count }} items on the agenda.</p>
+
+        {% if request.user.role == 2 %}
+            <a class="block mt-4 text-uni-violet hover:underline" href="{% url "meetings:update" pk=meeting.id %}">Update Meeting</a>
+        {% endif %}
 
     </aside>
     

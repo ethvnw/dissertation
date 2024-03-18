@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ application.applicant }}'s Application Details{% endblock %}
+{% block content %}
+
+<div class="flex flex-col lg:flex-row justify-between gap-8">
+    <aside class="w-full">
+        <h1 class="mb-4">{{ application.applicant}}'s Application Decision.</h1>
+        <h2>Information</h2>
+        <p>For each assessment, indicate whether it is approved or rejected.</p>
+    </aside>
+    
+    <section class="p-4 rounded bg-gray-50 shadow-md w-full">    
+        <form action="{% url "ecf_application:decision" pk=application.id %}" method="post">
+        {% for assessment in assessments %}
+            <div class="border-b pt-4 first:p-0">
+                <h2>Assessment {{ forloop.counter }} Details</h2>
+                <p>Module Code</p>
+                <p class="bg-transparent rounded-sm border border-uni-violet mb-2 p-2">{{ assessment.module}}</p>
+
+                <p>Name of Affected Assessment</p>
+                <p class="bg-transparent rounded-sm border border-uni-violet mb-2 p-2">{{ assessment.assessment }}</p>
+
+                <p>Requested Action</p>
+                <p class="bg-transparent rounded-sm border border-uni-violet mb-2 p-2">{{ assessment.get_action_display }}</p>
+
+                {% if assessment.extension_date %}
+                    <p>Extension Date</p>
+                    <p class="bg-transparent rounded-sm border border-uni-violet mb-2 p-2">{{ assessment.extension_date }}</p>
+                {% endif %}
+
+                <label for="info">Further Information</label>
+                <textarea name="info" id="info" class="bg-transparent rounded-sm border-uni-violet mb-2 w-full" disabled>{{ assessment.description }}</textarea>
+                
+                {% if assessment_comments %}
+                    <h3>Comments</h3>
+                    <ul>
+                        {% for comment in assessment_comments %}
+                            {% if comment.assessment == assessment %}
+                                <li class="italic">{{ comment.user}} on {{ comment.date }}</li>
+                                <li class="mb-2"> {{ comment.comment }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="mb-4">
+                    <h3>Decision</h3>
+                    <div>
+                        <label for="{{ assessment.id }}-approve">
+                            <input type="radio" name="{{ assessment.id }}-decision" id="{{ assessment.id }}-approve" value="approve" required>
+                            Approve
+                        </label>
+                    </div>
+                    <div>
+                        <label for="{{ assessment.id }}-reject">
+                            <input type="radio" name="{{ assessment.id }}-decision" id="{{ assessment.id }}-reject" value="reject" required>
+                            Reject
+                        </label>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% csrf_token %}
+        <button class="btn-primary w-full" type="submit">Submit Decisions</button>
+        </form>
+    </section>
+</div>
+
+{% endblock %}

@@ -10,7 +10,7 @@
     </div>
 
     {% for app in ecf_apps %}
-        <a class="flex justify-between items-center gap-3 p-4 hover:bg-gray-200 border-t" href="{% if app.status == 1 %} {{ app.get_absolute_url }} {% else %} {% url "ecf_application:edit" pk=app.id %} {% endif %}">
+        <a class="flex justify-between items-center gap-3 p-4 hover:bg-gray-200 border-t" href="{{ app.get_absolute_url }}">
             <div>
                 <p>{{ app.get_circumstance_display }}</p>
                 <p class="text-sm">Submitted: {{ app.submission_date|date:"d F Y" }}</p>

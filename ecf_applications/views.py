@@ -3,13 +3,14 @@ import os
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.forms import formset_factory, modelformset_factory
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.formats import date_format
-from django.views.generic import DetailView, TemplateView, View
+from django.views.generic import DetailView, ListView, TemplateView, View
 from formtools.wizard.views import SessionWizardView
 
 from authentication.decorators import secretary_required, student_required
@@ -32,8 +33,8 @@ FORMS = [
 ]
 
 TEMPLATES = {
-    'application_form': 'ecf_applications/application_form.html',
-    'assessment_formset': 'ecf_applications/assessment_form.html'
+    'application_form': 'ecf_applications/new/application_form.html',
+    'assessment_formset': 'ecf_applications/new/assessment_form.html'
 }
 
 
@@ -82,26 +83,47 @@ class NewECFApplicationWizardView(SessionWizardView):
             assessment.application = application
             assessment.save()
 
+        Notification.objects.bulk_create([
+            Notification(
+                application=application,
+                user=user,
+                message="A new ECF application has been submitted"
+            )
+            for user in User.objects.filter(
+                department=self.request.user.department,
+                role=User.SECRETARY
+            )
+        ])
         return redirect('ecf_application:success')
 
 
 @method_decorator(student_required, name="dispatch")
 class ECFApplicationSuccessView(TemplateView):
-    template_name = "ecf_applications/success.html"
+    template_name = "ecf_applications/new/success.html"
 
 
 @method_decorator(login_required, name="dispatch")
 class ECFApplicationDetailView(DetailView):
     model = ECFApplication
-    template_name = "ecf_applications/detail.html"
+    template_name = "ecf_applications/detail/student_detail.html"
     context_object_name = "application"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.role == User.STUDENT:
+            if self.get_object().applicant != request.user:
+                raise PermissionDenied
+
+            if self.get_object().status == ECF_CODES["ACTION_REQUIRED"]:
+                return redirect('ecf_application:edit', pk=self.get_object().pk)
+        
+        return super().get(request, *args, **kwargs)
 
     def get_template_names(self):
         if self.request.user.role == User.SECRETARY:
-            return "ecf_applications/secretary_detail.html"
+            return "ecf_applications/detail/secretary_detail.html"
         
         elif self.request.user.role == User.SCRUTINY:
-            return "ecf_applications/scrutiny_detail.html"
+            return "ecf_applications/detail/scrutiny_detail.html"
         
         return self.template_name
 
@@ -111,7 +133,7 @@ class ECFApplicationDetailView(DetailView):
             application=self.object
         )
 
-        if self.request.user.role == User.SECRETARY:
+        if self.request.user.role == User.SECRETARY or self.request.user.role == User.SCRUTINY:
             context["student"] = Student.objects.get(user=self.object.applicant)
             
             context["application_comments"] = ECFApplicationComment.objects.filter(
@@ -189,6 +211,9 @@ class ECFApplicationEditView(TemplateView):
     def get(self, request, *args, **kwargs):
         application = ECFApplication.objects.get(pk=kwargs['pk'])
 
+        if application.applicant != request.user:
+            raise PermissionDenied
+
         if application.status != ECF_CODES["ACTION_REQUIRED"]:
             messages.error(request, "You cannot edit this application")
             return redirect('ecf_application:detail', pk=application.pk)
@@ -259,5 +284,95 @@ class ECFApplicationEditView(TemplateView):
             application = context["application"]
             application.status = ECF_CODES["PENDING"]
             application.save()
-
+            
+        Notification.objects.bulk_create([
+            Notification(
+                application=application,
+                user=user,
+                message=f"{application.applicant} has edited their ECF application"
+            )
+            for user in User.objects.filter(
+                department=request.user.department,
+                role=User.SECRETARY
+            )
+        ])
         return redirect('ecf_application:detail', pk=context["application"].pk)
+
+
+class ECFApplicationListView(ListView):
+    model = ECFApplication
+    template_name = "ecf_applications/list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        applications = ECFApplication.objects.filter(
+            applicant__department=self.request.user.department
+        ).order_by("-last_modified")
+
+        finalised_applications = applications.filter(status__in=[
+            ECF_CODES["APPROVED"], ECF_CODES["REJECTED"], ECF_CODES["PARTIAL_APPROVAL"]
+        ])
+
+        context["finalised_applications"] = finalised_applications
+
+        context["ongoing_applications"] = applications.exclude(
+            pk__in=finalised_applications
+        )
+
+        return context
+
+
+@method_decorator(secretary_required, name="dispatch")
+class ECFApplicationDecisionView(TemplateView):
+    template_name = "ecf_applications/decision.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["application"] = ECFApplication.objects.get(pk=self.kwargs['pk'])
+        context["assessments"] = ECFApplicationAssessment.objects.filter(
+            application=context["application"]
+        )
+                
+        context["application_comments"] = ECFApplicationComment.objects.filter(
+            application=context["application"]
+        )
+        context["assessment_comments"] = ECFApplicationAssessmentComment.objects.filter(
+            assessment__application=context["application"]
+        )
+
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        application = ECFApplication.objects.get(pk=kwargs['pk'])
+        assessments = ECFApplicationAssessment.objects.filter(application=application)
+
+        for assessment in assessments:
+            decision = request.POST.get(f'{assessment.pk}-decision')
+            
+            if decision == "approve":
+                assessment.status = ECF_CODES['APPROVED']
+            elif decision == "reject":
+                assessment.status = ECF_CODES['REJECTED']
+
+            if decision:
+                assessment.save()
+
+        # set application status to approved if all assessments are approved
+        if all([assessment.status == ECF_CODES['APPROVED'] for assessment in assessments]):
+            application.status = ECF_CODES['APPROVED']
+        elif all([assessment.status == ECF_CODES['REJECTED'] for assessment in assessments]):
+            application.status = ECF_CODES['REJECTED']
+        else:
+            application.status = ECF_CODES['PARTIAL_APPROVAL']
+
+        application.save()
+
+        messages.success(request, "Decision submitted successfully")
+        Notification.objects.create(
+            application=application,
+            user=application.applicant,
+            message="A decision has been made on your ECF application"
+        )
+        return redirect('ecf_application:detail', pk=application.pk)
+

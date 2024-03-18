@@ -8,4 +8,5 @@ urlpatterns = [
     path("new/", views.MeetingCreateView.as_view(), name="new"),
     path("detail/<int:pk>/", views.MeetingDetailView.as_view(), name="detail"),
     path("list/", views.MeetingListView.as_view(), name="list"),
+    path("update/<int:pk>/", views.MeetingUpdateView.as_view(), name="update"),
 ]

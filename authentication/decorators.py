@@ -33,9 +33,9 @@ def secretary_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
     return actual_decorator
 
 
-def scrutiny_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=settings.LOGIN_URL):
+def staff_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=settings.LOGIN_URL):
     actual_decorator = user_passes_test(
-        lambda u: u.is_active and u.role == 3,
+        lambda u: u.is_active and (u.role == 2 or u.role == 3),
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )

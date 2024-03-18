@@ -4,7 +4,7 @@ navButton.onclick = () => {
     const navButtonIcon = navButton.querySelector('i');
 
     navBar.classList.toggle('p-4');
-    navBar.classList.toggle('max-h-48');
+    navBar.classList.toggle('max-h-96');
     navButtonIcon.classList.toggle('fa-bars');
     navButtonIcon.classList.toggle('fa-times');
 }

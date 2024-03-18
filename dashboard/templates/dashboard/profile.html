@@ -7,7 +7,12 @@
     <aside class="w-full">
         <h1 class="mb-4">Profile.</h1>
         <h2 class="mb-2">Information</h2>
-        <p class="mb-4">Your profile page allows you to view and edit your current details stored in the system. These details are automatically updated in any existing application you have made.</p>
+
+        {% if user.role == 1 %}
+            <p class="mb-4">Your profile page allows you to view and edit your current details stored in the system. These details are automatically updated in any existing application you have made.</p>
+        {% else %}
+            <p class="mb-4">Your profile page allows you to view and edit your current details stored in the system.</p>
+        {% endif %}
 
         {% if student.support_plan %}
             <h2 class="mb-2">Support Plan</h2>

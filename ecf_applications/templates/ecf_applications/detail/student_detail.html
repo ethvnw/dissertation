@@ -50,7 +50,10 @@
 
         {% for assessment in assessments %}
         <div class="border-t pt-4">
-            <h2>Assessment {{ forloop.counter }} Details</h2>
+            <div class="flex justify-between">
+                <h2>Assessment {{ forloop.counter }} Details</h2>
+                <h3 class="font-semibold">{{ assessment.get_status_display|upper }}</h3>
+            </div>
             <label for="code">Module Code</label>
             <input type="text" name="code" id="code" value="{{ assessment.module}}" class="bg-transparent rounded-sm border-uni-violet mb-4 w-full" disabled>
 

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Applications List{% endblock title %}
+{% block content %}
+
+<h1 class="mb-8">Viewing All Applications.</h1>
+
+<section class="flex flex-col gap-4 lg:flex-row lg:justify-between">
+    <div class="border border-uni-violet rounded mb-auto w-full">
+        <h2 class="p-4">Ongoing Applications</h2>
+    
+        {% for app in ongoing_applications %}
+            <a class="flex justify-between items-center gap-3 p-4 hover:bg-gray-200 border-t" href="{{ app.get_absolute_url }}">
+                <div>
+                    <p>{{ app.get_circumstance_display }}</p>
+                    <p class="text-sm">Submitted: {{ app.submission_date|date:"d F Y" }}</p>
+
+                    {% if app.evidence == "" %}
+                        <div class="flex flex-row items-baseline gap-2">
+                            <i class="fa-solid fa-circle-exclamation text-orange-400"></i>
+                            <p class="italic">Evidence has not been uploaded.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <p class="font-semibold text-right">{{ app.get_status_display|upper }}</p>
+            </a>
+        {% empty %}
+            <p class="p-4 border-t">There are no ongoing applications.</p>
+        {% endfor %}
+    </div>
+    
+    <div class="border border-uni-violet rounded mb-auto w-full">
+        <h2 class="p-4">Finalised Applications</h2>
+   
+        {% for app in finalised_applications %}
+            <a class="flex justify-between items-center gap-3 p-4 hover:bg-gray-200 border-t" href="{{ app.get_absolute_url }}">
+                <div>
+                    <p>{{ app.get_circumstance_display }}</p>
+                    <p class="text-sm">Submitted: {{ app.submission_date|date:"d F Y" }}</p>
+                </div>
+                <p class="font-semibold text-right">{{ app.get_status_display|upper }}</p>
+            </a>
+        {% empty %}
+            <p class="p-4 border-t">There are no finalised applications.</p>
+        {% endfor %}
+    </div>
+</section>
+    
+    
+{% endblock content %}

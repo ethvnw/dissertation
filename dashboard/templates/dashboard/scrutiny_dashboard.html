@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock title %}
+{% block content %}
+
+<h1 class="mb-8">Welcome, {{user}}.</h1>
+
+{% if ongoing_meeting %}
+    <section class="border border-uni-violet rounded mb-4">
+        <h2 class="p-4">Ongoing Meeting</h2>
+        <a class="block p-4 hover:bg-gray-200 border-t rounded" href="{{ ongoing_meeting.get_absolute_url }}">
+            <p>{{ ongoing_meeting.get_category_display }}</p>
+            <p class="text-sm">{{ ongoing_meeting.date_time|date:"d F Y H:i" }}</p>
+            <p class="text-sm">Created by {{ ongoing_meeting.creator }}</p>
+        </a>
+    </section>
+{% endif %}
+
+<section class="flex-1 mb-auto border border-uni-violet rounded">
+    <h2 class="p-4">Upcoming Meetings</h2>
+    {% for meeting in meetings %}
+        <a class="block p-4 hover:bg-gray-200 border-t rounded" href="{{ meeting.get_absolute_url }}">
+            <p>{{ meeting.get_category_display }}</p>
+            <p class="text-sm">{{ meeting.date_time|date:"d F Y H:i" }}</p>
+            <p class="text-sm">Created by {{ meeting.creator }}</p>
+        </a>
+    {% empty %}
+        <p class="p-4 border-t">No meetings scheduled at this time.</p>
+    {% endfor %}
+
+</section>
+
+    
+{% endblock content %}
