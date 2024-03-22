@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import views as auth_views
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.views.generic import CreateView
 
 from .forms import StudentSignInForm, StudentSignUpForm

@@ -886,6 +886,10 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
   position: absolute;
 }
 
+.sticky {
+  position: sticky;
+}
+
 .left-0 {
   left: 0px;
 }
@@ -1037,6 +1041,10 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
   cursor: pointer;
 }
 
+.resize {
+  resize: both;
+}
+
 .list-inside {
   list-style-position: inside;
 }
@@ -1109,12 +1117,12 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
   border-width: 1px;
 }
 
-.border-t {
-  border-top-width: 1px;
-}
-
 .border-b {
   border-bottom-width: 1px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-uni-violet {
@@ -1183,10 +1191,6 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
 
 .pt-4 {
   padding-top: 1rem;
-}
-
-.pb-4 {
-  padding-bottom: 1rem;
 }
 
 .text-center {
@@ -1322,14 +1326,6 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
 
 .first\:p-0:first-child {
   padding: 0px;
-}
-
-.first\:pt-0:first-child {
-  padding-top: 0px;
-}
-
-.first\:pt-4:first-child {
-  padding-top: 1rem;
 }
 
 .last\:mb-0:last-child {

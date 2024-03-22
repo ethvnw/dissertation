@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'authentication',
     'dashboard',
     'ecf_applications',
-    'meetings'
+    'meetings',
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
+            'debug': True,
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

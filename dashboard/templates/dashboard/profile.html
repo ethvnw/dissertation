@@ -14,6 +14,8 @@
             <p class="mb-4">Your profile page allows you to view and edit your current details stored in the system.</p>
         {% endif %}
 
+        <p class="mb-4"><a class="text-uni-violet hover:underline" href="{% url "change_password" %}">Trying to change your password?</a></p>
+
         {% if student.support_plan %}
             <h2 class="mb-2">Support Plan</h2>
             <p class="mb-2">You currently have an uploaded support plan on file.</p>

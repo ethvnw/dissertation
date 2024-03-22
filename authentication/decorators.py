@@ -5,21 +5,13 @@ from django.core.exceptions import PermissionDenied
 
 
 def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=settings.LOGIN_URL):
-    def check_role(user):
-        if user.is_active and user.role == 1:
-            return True
-        
-        raise PermissionDenied
-    
     actual_decorator = user_passes_test(
-        check_role,
+        lambda u: u.is_active and u.role == 1,
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
-    
-    if function:
-        return actual_decorator(function)
-    return actual_decorator
+
+    return actual_decorator(function)
 
 
 def secretary_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=settings.LOGIN_URL):
@@ -28,9 +20,7 @@ def secretary_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
-    if function:
-        return actual_decorator(function)
-    return actual_decorator
+    return actual_decorator(function)
 
 
 def staff_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=settings.LOGIN_URL):
@@ -39,6 +29,4 @@ def staff_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login
         login_url=login_url,
         redirect_field_name=redirect_field_name
     )
-    if function:
-        return actual_decorator(function)
-    return actual_decorator
+    return actual_decorator(function)

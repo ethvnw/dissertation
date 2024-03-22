@@ -8,4 +8,5 @@ urlpatterns = [
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path("profile/", views.ProfileView.as_view(), name="profile"),
     path("mark_read", views.NotificationMarkReadView.as_view(), name="mark_read"),
+    path("change_password/", views.PasswordChangeView.as_view(), name="change_password"),
 ]

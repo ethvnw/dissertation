@@ -1,9 +1,11 @@
 from datetime import timedelta
 
 from django.contrib import messages
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView, View
@@ -15,7 +17,7 @@ from ecf_applications.models import CODES as ECF_CODES
 from ecf_applications.models import ECFApplication
 from meetings.models import Meeting
 
-from .forms import ProfileForm, StudentProfileForm
+from .forms import ProfileForm, StudentProfileForm, PasswordChangeForm
 
 
 @login_required
@@ -42,6 +44,9 @@ class DownloadView(View):
             if student.user != request.user and not (
                 request.user.role == User.SCRUTINY or request.user.role == User.SECRETARY):
                 raise PermissionDenied()
+            
+        else:
+            raise PermissionDenied()
             
         return sendfile(request, file_name, attachment=True)
 
@@ -135,6 +140,17 @@ class ProfileView(TemplateView):
                 return redirect("profile")
         
         return render(request, "dashboard/profile.html", {"form": form})
+
+
+@method_decorator(login_required, name="dispatch")
+class PasswordChangeView(auth_views.PasswordChangeView):
+    template_name = "dashboard/change_password.html"
+    success_url = reverse_lazy("profile")
+    form_class = PasswordChangeForm
+
+    def form_valid(self, form):
+        messages.success(self.request, "Password updated successfully")
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")

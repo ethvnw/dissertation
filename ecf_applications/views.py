@@ -13,7 +13,7 @@ from django.utils.formats import date_format
 from django.views.generic import DetailView, ListView, TemplateView, View
 from formtools.wizard.views import SessionWizardView
 
-from authentication.decorators import secretary_required, student_required
+from authentication.decorators import secretary_required, staff_required, student_required
 from authentication.models import Student, User
 from dashboard.models import Notification
 from ecf_applications.models import CODES as ECF_CODES
@@ -267,18 +267,24 @@ class ECFApplicationEditView(TemplateView):
                 request.POST, request.FILES, instance=context["application"], prefix="application_form"
             )
 
-            if application_form.is_valid():
-                application = application_form.save(commit=False)
-                application.status = ECF_CODES["PENDING"]
-                application.save()
+            if not application_form.is_valid():
+                context["application_form"] = application_form
+                return self.render_to_response(context)
+            
+            application = application_form.save(commit=False)
+            application.status = ECF_CODES["PENDING"]
+            application.save()
 
         if "assessment_formset" in context:
             assessment_formset = modelformset_factory(
                 ECFApplicationAssessment, form=ECFApplicationAssessmentForm, extra=0
             )(request.POST, queryset=context["assessments"])
 
-            if assessment_formset.is_valid():
-                assessment_formset.save()
+            if not assessment_formset.is_valid():
+                context["assessment_formset"] = assessment_formset
+                return self.render_to_response(context)
+            
+            assessment_formset.save()
 
         if not "application_form" in context:
             application = context["application"]
@@ -299,6 +305,7 @@ class ECFApplicationEditView(TemplateView):
         return redirect('ecf_application:detail', pk=context["application"].pk)
 
 
+@method_decorator(staff_required, name="dispatch")
 class ECFApplicationListView(ListView):
     model = ECFApplication
     template_name = "ecf_applications/list.html"

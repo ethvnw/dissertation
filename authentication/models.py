@@ -34,7 +34,7 @@ class User(AbstractUser):
     objects = NewUserManager()
 
     def get_absolute_url(self):
-        return reverse("profile", kwargs={"pk": self.pk})
+        return reverse("profile")
     
 
     def __str__(self):
