@@ -7,7 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.forms import formset_factory, modelformset_factory
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.utils.formats import date_format
 from django.views.generic import DetailView, ListView, TemplateView, View
@@ -209,7 +209,7 @@ class ECFApplicationEditView(TemplateView):
     template_name = "ecf_applications/edit.html"
 
     def get(self, request, *args, **kwargs):
-        application = ECFApplication.objects.get(pk=kwargs['pk'])
+        application = get_object_or_404(ECFApplication, pk=kwargs['pk'])
 
         if application.applicant != request.user:
             raise PermissionDenied
