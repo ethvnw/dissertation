@@ -62,7 +62,7 @@
                 {% for notification in notifications %}
                     <a href="{{ notification.application.get_absolute_url }}" class="flex items-center gap-4 font-normal px-4 py-2 mb-2 last:mb-0 hover:bg-gray-200">
                         {% if not notification.viewed %}
-                            <i class="fa-solid fa-circle fa-2xs text-uni-violet"></i>
+                            <div class="h-10 w-1 rounded bg-uni-violet"></div>
                         {% endif %}
                         
                         <div class="{% if notification.viewed %} text-gray-500 {% endif %}">
