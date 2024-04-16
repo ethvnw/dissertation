@@ -8,7 +8,9 @@
     <div class="border border-uni-violet rounded mb-auto w-full">
         <div class="flex flex-row items-center justify-between p-4 w-full">
             <h2>Scrutiny Panel Meetings</h2>
-            <a class="btn-primary hover:text-gray-100" href="{% url "meetings:new" %}">New Meeting</a>
+            {% if request.user.role == 2 %}
+                <a class="btn-primary hover:text-gray-100" href="{% url "meetings:new" %}">New Meeting</a>
+            {% endif %}
         </div>
 
         {% for meeting in scrutiny_meetings %}
@@ -25,7 +27,9 @@
     <div class="border border-uni-violet rounded mb-auto w-full">
         <div class="flex flex-row items-center justify-between p-4">
             <h2>Exam Board Meetings</h2>
-            <a class="btn-primary hover:text-gray-100" href="{% url "meetings:new" %}">New Meeting</a>
+            {% if request.user.role == 2 %}
+                <a class="btn-primary hover:text-gray-100" href="{% url "meetings:new" %}">New Meeting</a>
+            {% endif %}
         </div>
 
         {% for meeting in exam_meetings %}

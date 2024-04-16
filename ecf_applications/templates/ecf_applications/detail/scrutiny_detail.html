@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{ application.applicant }}'s Application Details{% endblock %}
+{% block title %}Student {{ application.applicant.id }}'s Application Details{% endblock %}
 {% block content %}
 
 <div class="flex flex-col lg:flex-row justify-between gap-8">
