@@ -38,7 +38,7 @@
                     <a class="py-4" href="{% url "ecf_application:list" %}">ECF Applications</a>
                 {% endif %}
                 
-                <button id="dropdown-button" class="hidden lg:flex lg:items-center lg:gap-2 hover:text-uni-violet">
+                <button id="dropdown-button" class="hidden lg:flex lg:items-center lg:gap-2 hover:text-uni-violet" title="Dropdown button">
                     <p>{{ request.user }}</p> 
                     <i class="fa fa-chevron-down text-uni-violet transition-transform"></i>
                 </button>
@@ -77,7 +77,7 @@
 
             <div class="flex gap-8">
                 {% if request.user.role != 3 %}
-                    <button class="lg:ml-8" id="notification-button">
+                    <button class="lg:ml-8" id="notification-button" title="Notification button">
                         {% if unread_notifications %}
                             <i id="notification-bell" class="fa-solid fa-bell text-uni-violet"></i>
                             <span class="absolute bg-red-400 p-1 rounded-full after:absolute after:p-1 after:rounded-full after:right-0 after:top-0 after:bg-red-400 after:animate-ping"></span>
@@ -87,7 +87,7 @@
                     </button>
                 {% endif %}
 
-                <button id="nav-button" class="lg:hidden">
+                <button id="nav-button" class="lg:hidden" title="Navigation bar button">
                     <i class="fa-solid fa-bars w-5"></i>
                 </button>
             </div>
@@ -99,7 +99,7 @@
     </main>
 
     <footer>
-        <p class="text-center text-sm text-gray-500">&copy; 2024 Ethan Watts</p>
+        <p class="text-center text-sm text-gray-800">&copy; 2024 Ethan Watts</p>
     </footer>
 
     <script src="{% static "js/utils.js" %}"></script>
