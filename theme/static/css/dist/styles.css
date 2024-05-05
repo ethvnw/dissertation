@@ -1319,6 +1319,11 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
   color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+
 .text-gray-900 {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
@@ -1337,11 +1342,6 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
 .shadow {
@@ -1555,6 +1555,10 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
 
   .lg\:w-96 {
     width: 24rem;
+  }
+
+  .lg\:w-1\/2 {
+    width: 50%;
   }
 
   .lg\:flex-row {
